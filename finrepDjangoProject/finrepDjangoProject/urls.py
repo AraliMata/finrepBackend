@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from backendEmployeeTest import views
+from backendEmployeeTest.views import Employee
+from FinRepApp import views
 from rest_framework import routers
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register('employeedetails', views.Employee)
+router.register('employeedetails', Employee)
+router.register('cuentas', views.Cuentas)
 
 urlpatterns = [
     path('', include(router.urls)),
