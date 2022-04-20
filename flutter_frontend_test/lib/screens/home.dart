@@ -128,11 +128,11 @@ class MyAppState extends State<Home> {
       children: <Widget>[
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(hintText: 'Enter empresa'),
+          decoration: const InputDecoration(hintText: 'Enter name'),
         ),
         TextField(
           controller: _controller2,
-          decoration: const InputDecoration(hintText: 'Enter codigo'),
+          decoration: const InputDecoration(hintText: 'Enter email'),
         ),
         // TextField(
         //   controller: _controller3,
