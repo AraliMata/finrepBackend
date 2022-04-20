@@ -30,9 +30,6 @@ class HomeState extends State<Home> {
     List<Employee> employees = items.map<Employee>((json) {
       return Employee.fromJson(json);
     }).toList();
-    print("Aqui");
-    // print(employees[0]);
-    // print(employees[1]);
 
     return employees;
   }
@@ -101,6 +98,7 @@ class Register extends StatefulWidget {
 class MyAppState extends State<Home> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
+  // final TextEditingController _controller3 = TextEditingController();
   Future<Employee>? _futureEmployee;
 
   @override
@@ -130,12 +128,16 @@ class MyAppState extends State<Home> {
       children: <Widget>[
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(hintText: 'Enter name'),
+          decoration: const InputDecoration(hintText: 'Enter empresa'),
         ),
         TextField(
           controller: _controller2,
-          decoration: const InputDecoration(hintText: 'Enter email'),
+          decoration: const InputDecoration(hintText: 'Enter codigo'),
         ),
+        // TextField(
+        //   controller: _controller3,
+        //   decoration: const InputDecoration(hintText: 'Enter nombre'),
+        // ),
         ElevatedButton(
           onPressed: () {
             setState(() {
