@@ -18,12 +18,21 @@ from django.urls import include, path
 from backendEmployeeTest.views import Employee
 from FinRepApp import views
 from rest_framework import routers
+from django.views.static import serve
+import os
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
+
+def flutter_redirect(request, resource):
+    return serve(request, resource, FLUTTER_WEB_APP)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('flutter_web_app/', lambda r: flutter_redirect(r, 'index.html')),
+    path('flutter_web_app/<path:resource>', flutter_redirect),
 ]
