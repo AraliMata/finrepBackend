@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-_538ryhslynbin5194-^1rnzxl&3czzbiz$*o5bln8@x(!$lc4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1','finreport.azurewebsites.net']
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1','finreport.azurewebsites.net','localhost']
 
 
 # Application definition
@@ -54,7 +54,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+       'http://localhost:4200',
+)
 
 ROOT_URLCONF = 'finrepDjangoProject.urls'
 
