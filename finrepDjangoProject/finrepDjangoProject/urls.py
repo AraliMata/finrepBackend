@@ -27,6 +27,8 @@ import pandas as pd
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
+# recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
+# router.register('xlsx', recibirArchivoPost)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
 
@@ -37,7 +39,7 @@ def flutter_redirect(request, resource):
 def xlsx_upload(request):
     df = pd.read_excel(request.FILES['file'])
     print (df)
-    return Response({"data": df})
+    return Response("naisu")
 
 urlpatterns = [
     path('xlsx',xlsx_upload),
