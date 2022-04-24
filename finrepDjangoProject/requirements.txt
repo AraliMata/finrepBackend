@@ -4,3 +4,5 @@ djangorestframework==3.13.1
 mssql-django==1.1.2
 pyodbc==4.0.32
 python-dotenv==0.19.2
+pandas==1.4.2
+openpyxl==3.0.9

@@ -37,9 +37,10 @@ def flutter_redirect(request, resource):
 
 @api_view(['POST'])
 def xlsx_upload(request):
+    print(request.FILES['file'])
     df = pd.read_excel(request.FILES['file'])
     print (df)
-    return Response("naisu")
+    return Response({"Valor de linea 0 columna 0":df.iat[0,0]})
 
 urlpatterns = [
     path('xlsx',xlsx_upload),
