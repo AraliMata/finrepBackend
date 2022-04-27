@@ -34,8 +34,9 @@ class Cuentas(models.Model):
         db_table = "cuentas"
 
 class Movimientos(models.Model):
-    idCuenta = models.ForeignKey('Cuentas', on_delete=models.CASCADE)
+    idEmpresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
     codigo = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)
     saldoInicial = models.FloatField()
     totalCargos = models.FloatField()
     totalAbonos = models.FloatField()
