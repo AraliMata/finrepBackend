@@ -37,11 +37,19 @@ class Movimientos(models.Model):
     idCuenta = models.ForeignKey('Cuentas', on_delete=models.CASCADE)
     codigo = models.CharField(max_length=100)
     saldoInicial = models.FloatField()
+<<<<<<< Updated upstream
     totalCargos = models.FloatField()
     totalAbonos = models.FloatField()
     saldoAcumulado = models.FloatField()
     fechaInicio = models.DateField()
     fechaFinal = models.DateField()
+=======
+    cargos = models.FloatField(null=True)
+    abonos = models.FloatField(null=True)
+    # saldoAcumulado = models.FloatField()
+    fecha = models.DateField(null=True)
+
+>>>>>>> Stashed changes
 
     class Meta:
         db_table = "movimientos"
