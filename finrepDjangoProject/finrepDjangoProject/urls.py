@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from email.mime import base
 from django.contrib import admin
 from django.urls import include, path
 from backendEmployeeTest.views import Employee
@@ -24,9 +25,13 @@ from django.views.static import serve
 import os
 import pandas as pd
 
+# cuentas_list = views.Cuentas.as_view({
+#     'get': 'list'
+# })
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
+# router.register('cuentas', cuentas_list, basename='cuentas-list')
 # recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
 # router.register('xlsx', recibirArchivoPost)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,7 +47,27 @@ def xlsx_upload(request):
     print (df)
     return Response({"Valor de linea 0 columna 0":df.iat[0,0]})
 
+@api_view(['GET'])
+def balanceGeneral(request):
+    jsonOp = {
+                'activo': {
+                    'circulante': [['Bancos', 6,181.41],['Clientes', 2]],
+                    'fijo': [['Uno', 1], ['dos', 2]],
+                    'diferido': [['jojo', 4],['jeje', 5]]
+                },
+                'pasivo':{
+                    'circulante': [['Bancos', 6,181.41],['Clientes', 2]],
+                    'fijo': [['Uno', 1], ['dos', 2]],
+                    'diferido': [['jojo', 4],['jeje', 5]]
+                }, 
+                'capital': {
+                    'capital': [['jujuju', 18]]
+                }
+            }
+    return Response(jsonOp)
+
 urlpatterns = [
+    path('balanceGeneral',balanceGeneral),
     path('xlsx',xlsx_upload),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),

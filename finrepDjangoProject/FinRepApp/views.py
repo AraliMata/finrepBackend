@@ -10,4 +10,3 @@ class Cuentas(viewsets.ModelViewSet):
     serializer_class = CuentasSerializer
 
 
-
