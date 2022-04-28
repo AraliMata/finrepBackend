@@ -149,8 +149,22 @@ def fix_df(df):
                 date_input = row[1]
                 datetimeobject = datetime.strptime(date_input, '%d/%b/%Y')
                 new_date = datetimeobject.strftime('%Y-%m-%d')
+                if (pd.isna(row[6])):
+                    cargos = 0.0
+                else:
+                    cargos = row[6]
+
+                if (pd.isna(row[7])):
+                    abonos = 0.0
+                else:
+                    abonos = row[7]
+
+                if (pd.isna(row[7])):
+                    saldo = 0.0
+                else:
+                    saldo = row[8]
                 
-                temp_df = {'id_empresa': 2, 'codigo': current_code, 'nombre': current_name, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': row[6], 'abonos': row[7], 'saldo': row[8], 'saldo_inicial': current_saldoi}
+                temp_df = {'id_empresa': 2, 'codigo': current_code, 'nombre': current_name, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': cargos, 'abonos': abonos, 'saldo': saldo, 'saldo_inicial': current_saldoi}
                 new_df = new_df.append(temp_df, ignore_index=True)
         else:
             count = count + 1
