@@ -52,9 +52,10 @@ def flutter_redirect(request, resource):
 
 @api_view(['POST'])
 def upload(request):
-    df = xlsx_upload(request)
+    xlsx_upload(request)
     init_db()
-    dataframe_upload(df)
+    dataframe_upload(df_listo)
+    return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
 
 
 def xlsx_upload(request):
@@ -63,8 +64,7 @@ def xlsx_upload(request):
     print (df)
     global df_listo
     df_listo = fix_df(df)
-    return df_listo
-    #return Response({"Valor de linea 0 columna 0":df.iat[0,0]})
+    # return df_listo
 
 def init_db():
     server = 'finrep-server.database.windows.net' 
@@ -80,8 +80,10 @@ def init_db():
 
 def dataframe_upload(df):
     cursor = init_db()
+    print("HOLA MAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     for index, row in df.iterrows():
-     cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha) values(?,?,?,?,?,?,?,?,?)", row.id_empresa, row.codigo, row.nombre, row.concepto, row.referencia, float(row.saldo_inicial), float(row.cargos), float(row.abonos), row.fecha)
+        # print(row.id_empresa," ", row.codigo," ", row.nombre," ", row.concepto," ", row.referencia," ", float(row.saldo_inicial)," ", float(row.cargos)," ", float(row.abonos)," ", row.fecha)
+        cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha) values(?,?,?,?,?,?,?,?,?)", row.id_empresa, row.codigo, row.nombre, row.concepto, row.referencia, float(row.saldo_inicial), float(row.cargos), float(row.abonos), row.fecha)
     cnxn.commit()
     cursor.close()
 
@@ -142,7 +144,7 @@ def fix_df(df):
                 current_name = row[2]
                 current_saldoi = row[8]
                 fecha_inicial = datetime(2016, 6, 1)
-                temp_df = {'id_empresa': 2, 'codigo': current_code, 'nombre': current_name, 'fecha': '2016-06-01', 'concepto': '', 'referencia': '', 'cargos': 0.0, 'abonos': 0.0, 'saldo': 0.0, 'saldo_inicial': current_saldoi}
+                temp_df = {'id_empresa': 3, 'codigo': current_code, 'nombre': current_name, 'fecha': '2016-06-01', 'concepto': '', 'referencia': '', 'cargos': 0.0, 'abonos': 0.0, 'saldo': 0.0, 'saldo_inicial': current_saldoi}
                 new_df = new_df.append(temp_df, ignore_index=True)
 
             elif (row[1] != "" and pd.isna(row[2])==False):
@@ -164,8 +166,12 @@ def fix_df(df):
                 else:
                     saldo = row[8]
                 
-                temp_df = {'id_empresa': 2, 'codigo': current_code, 'nombre': current_name, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': cargos, 'abonos': abonos, 'saldo': saldo, 'saldo_inicial': current_saldoi}
+                temp_df = {'id_empresa': 3, 'codigo': current_code, 'nombre': current_name, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': cargos, 'abonos': abonos, 'saldo': saldo, 'saldo_inicial': current_saldoi}
                 new_df = new_df.append(temp_df, ignore_index=True)
+                new_df['referencia'] = new_df['referencia'].fillna('')
+                new_df['cargos'] = new_df['cargos'].fillna(0)
+                new_df['abonos'] = new_df['abonos'].fillna(0)
+                new_df['saldo_inicial'] = new_df['saldo_inicial'].fillna(0)
         else:
             count = count + 1
 

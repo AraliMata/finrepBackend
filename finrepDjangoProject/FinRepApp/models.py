@@ -36,11 +36,11 @@ class Cuentas(models.Model):
 
 class Movimientos(models.Model):
     idEmpresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
-    codigo = models.CharField(max_length=100)
-    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=100,null=True)
+    nombre = models.CharField(max_length=100,null=True)
     concepto = models.CharField(max_length=100, null=True)
     referencia = models.CharField(max_length=100, null=True)
-    saldoInicial = models.FloatField()
+    saldoInicial = models.FloatField(null=True)
     cargos = models.FloatField(null=True)
     abonos = models.FloatField(null=True)
     # saldoAcumulado = models.FloatField()
