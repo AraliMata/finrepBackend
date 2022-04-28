@@ -81,7 +81,7 @@ def init_db():
 def dataframe_upload(df):
     cursor = init_db()
     for index, row in df.iterrows():
-     cursor.execute("INSERT INTO FinRep-DB.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha) values(?,?,?,?,?,?,?,?)", row.id_empresa, row.codigo, row.nombre, row.concepto, row.referencia, row.saldo_inicial, row.cargos, row.abonos, row.fecha)
+     cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha) values(?,?,?,?,?,?,?,?,?)", row.id_empresa, row.codigo, row.nombre, row.concepto, row.referencia, float(row.saldo_inicial), float(row.cargos), float(row.abonos), row.fecha)
     cnxn.commit()
     cursor.close()
 
