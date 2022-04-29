@@ -50,7 +50,6 @@ FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
 def flutter_redirect(request, resource):
     return serve(request, resource, FLUTTER_WEB_APP)
 
-
 def acomodarResponse(movimientos):
     activos = {'circulante':[['', '']], 'fijo': [['', '']], 'diferido':[['', '']]}
     pasivos = {'circulante':[['', '']], 'fijo': [['', '']], 'diferido':[['', '']]}
@@ -167,7 +166,8 @@ def init_db():
     username = 'equipoelite' 
     password = 'CoffeeSoft-2022' 
     global cnxn
-    cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    # cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     global cursor
     cursor = cnxn.cursor()
     return cursor
