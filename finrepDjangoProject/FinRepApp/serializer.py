@@ -9,3 +9,4 @@ class CuentasSerializer(serializers.ModelSerializer):
         'codigo',
         'nombre'
         ]
+
