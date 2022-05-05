@@ -16,6 +16,7 @@ Including another URLconf
 from email.mime import base
 from django.contrib import admin
 from django.urls import include, path
+import numpy as np
 from numpy import fix
 from backendEmployeeTest.views import Employee
 from FinRepApp import views
@@ -195,8 +196,9 @@ def dataframe_upload(df):
     cursor = init_db()
     print("HOLA MAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     for index, row in df.iterrows():
+        print(row)
         # print(row.id_empresa," ", row.codigo," ", row.nombre," ", row.concepto," ", row.referencia," ", float(row.saldo_inicial)," ", float(row.cargos)," ", float(row.abonos)," ", row.fecha)
-        cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha,codigoAgrupador,ingresoEgrego,nombreAgrupador,tipo) values(?,?,?,?,?,?,?,?,?,?,?,?,?)", row.id_empresa, row.codigo, row.nombre, row.concepto, row.referencia, float(row.saldo_inicial), float(row.cargos), float(row.abonos), row.fecha), row.codigo_agrupador, row.tipo, row.nombre_grupo, row.APC
+        cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha,codigoAgrupador,ingresoEgreso,nombreAgrupador,tipo) values(?,?,?,?,?,?,?,?,?,?,?,?,?)",row.id_empresa,row.codigo,row.nombre,row.concepto,row.referencia,float(row.saldo_inicial),float(row.cargos),float(row.abonos),row.fecha,row.codigo_agrupador,row.tipo,row.nombre_grupo,row.APC)
     cnxn.commit()
     cursor.close()
 
@@ -308,7 +310,9 @@ def fix_df(df):
 
         else:
             count = count + 1
-
+    new_df = new_df.replace(r'^\s*$', np.NaN, regex=True)
+    new_df = new_df.replace(np.nan, 'vacio', regex=True)
+    print(new_df.head)
     return new_df
     
 
