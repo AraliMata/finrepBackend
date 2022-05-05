@@ -229,6 +229,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('flutter_web_app/', lambda r: flutter_redirect(r, 'index.html')),
     path('flutter_web_app/<path:resource>', flutter_redirect),
+    # path('contabilidad/reportes/empresa<int:year>/<int:month>/<slug:slug>/', views.article_detail),
 ]
 
 def es_agrupador(code):
