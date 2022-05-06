@@ -232,9 +232,14 @@ urlpatterns = [
 ]
 
 def es_agrupador(code):
-        serie = catalogo.loc[catalogo['codigo'] == code]
-        nivel = serie.loc[catalogo['nivel'] == 3]
-        #print(nivel)
+    serie = catalogo.loc[catalogo['codigo'] == code]
+    nivel = serie.loc[catalogo['nivel'] == 3]
+    #print(nivel)
+    if nivel.size > 0:
+        tipo = nivel.iat[0, 3]
+        return (True, tipo)
+    else:
+        nivel = serie.loc[catalogo['tipo'] == 'F Capital Acreedora']
         if nivel.size > 0:
             tipo = nivel.iat[0, 3]
             return (True, tipo)
