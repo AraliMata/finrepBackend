@@ -41,9 +41,18 @@ def es_agrupador(code):
         tipo = nivel.iat[0, 3]
         return (True, tipo)
     else:
-        nivel = serie.loc[catalogo['tipo'] == 'F Capital Acreedora']
-        if nivel.size > 0:
-            tipo = nivel.iat[0, 3]
+        tipo1 = serie.loc[catalogo['tipo'] == 'H Resultados Acreedora']
+        tipo2 = serie.loc[catalogo['tipo'] == 'G Resultados Deudora']
+        tipo3 = serie.loc[catalogo['tipo'] == 'F Capital Acreedora']
+        
+        if tipo1.size > 0:
+            tipo = tipo1.iat[0, 3]
+            return (True, tipo)
+        elif tipo2.size > 0:
+            tipo = tipo2.iat[0, 3]
+            return (True, tipo)
+        elif tipo3.size > 0:
+            tipo = tipo3.iat[0, 3]
             return (True, tipo)
         else:
             return (False, 0)
