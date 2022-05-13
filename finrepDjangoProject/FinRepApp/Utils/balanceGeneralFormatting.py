@@ -99,3 +99,25 @@ def movimientoshacker():
     cnxn.commit()
     #cursor.close()
     return json
+
+def movimientosBalance():
+    storedProc = {"PasivoA": "EXEC dbo.GetBalancePasivoAcreedora @empresaID = ?", 
+    "ActivoA": "EXEC dbo.GetBalanceActivoAcreedora @empresaID = ?",
+    "ActivoD": "EXEC dbo.GetBalanceActivoDeudora @empresaID = ?",
+    "CapitalA": "EXEC dbo.GetBalanceCapitalAcreedora @empresaID = ?"}
+    params = (2)
+
+    cursor = init_db()
+    data = []
+    datos = {}
+
+    for tipo in storedProc:
+        resultado = cursor.execute(storedProc[tipo], params)
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(list(row))
+        datos[tipo] = data
+        data = []
+
+    print(datos)
+    return datos

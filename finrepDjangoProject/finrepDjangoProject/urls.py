@@ -55,6 +55,7 @@ router.register('cuentas', views.Cuentas)
 
 urlpatterns = [
     path('balanceGeneral', views.getMovimientos),
+    path('prueba', views.prueba),
     path('xlsx',views.uploadMovimientos),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
