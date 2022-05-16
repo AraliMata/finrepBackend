@@ -91,10 +91,10 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'FinRep-DB',
+        'NAME': 'FinrepDB',
         'USER': 'equipoelite',
         'PASSWORD': 'CoffeeSoft-2022',
-        'HOST': 'finrep-server.database.windows.net',
+        'HOST': 'finrep-db-server.database.windows.net',
         'Trusted_Connection': 'yes',
         "PORT": "1433",
         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", },
