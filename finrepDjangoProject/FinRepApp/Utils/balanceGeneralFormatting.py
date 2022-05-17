@@ -1,8 +1,8 @@
 import pyodbc
 
 def init_db():
-    server = 'finrep-server.database.windows.net' 
-    database = 'FinRep-DB' 
+    server = 'finrep-db-server.database.windows.net' 
+    database = 'FinrepDB' 
     username = 'equipoelite' 
     password = 'CoffeeSoft-2022' 
     global cnxn
