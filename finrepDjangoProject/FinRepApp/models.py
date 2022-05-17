@@ -52,3 +52,11 @@ class Movimientos(models.Model):
 
     class Meta:
         db_table = "movimientos"
+
+class Codigos_Agrupadores(models.Model):
+    idEmpresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
+    codigo = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "codigos_agrupadores"
