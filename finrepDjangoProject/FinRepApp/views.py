@@ -22,6 +22,12 @@ class Cuentas(viewsets.ModelViewSet):
     queryset = Cuentas.objects.all()
     serializer_class = CuentasSerializer
 
+@api_view(['GET'])
+def prueba(request):
+    balance = movimientosBalance()
+    json_object = js.dumps(balance)
+    print(json_object)
+    return Response(balance)
 
 @api_view(['GET'])
 def getMovimientos(request):
