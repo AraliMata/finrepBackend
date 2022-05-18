@@ -41,13 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'backendEmployeeTest',
     'FinRepApp',
-    'ckeditor',
-    'users',
-    'experiences',
-    'proyects',
-    'education',
-    'extras',
-    'rest_framework.authtoken'
     #hola
 ]
 
