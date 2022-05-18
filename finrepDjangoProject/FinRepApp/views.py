@@ -24,7 +24,7 @@ class Cuentas(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def prueba(request):
-    balance = movimientosBalance()
+    balance = getEstadoCodigos()
     json_object = js.dumps(balance)
     print(json_object)
     return Response(balance)
