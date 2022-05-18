@@ -1,4 +1,13 @@
 import pyodbc
+"""
+nombres stored procedures:
+
+egresos @id_empresa
+ingresos @id_empresa
+
+
+"""
+
 
 def init_db():
     server = 'finrep-db-server.database.windows.net' 
@@ -121,3 +130,58 @@ def movimientosBalance():
 
     print(datos)
     return datos
+
+def estadoResultados():
+    storedProc = {"ingresos": "EXEC dbo.ingresos @id_empresa = ?", "egresos": "EXEC dbo.egresos @id_empresa = ?"}
+
+    params = (2)
+    cursor = init_db()
+    data = []
+    datos = {}
+    for tipo in storedProc:
+        resultado = cursor.execute(storedProc[tipo], params)
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(list(row))
+        datos[tipo] = data
+        data = []
+
+    print(datos)
+    return datos
+
+
+    
+
+def getCodigos(reporte, idEmpresa):
+    if reporte == "BG":
+        storedProc = "EXEC dbo.codigosBalanceGenral @id_empresa = ?"
+    elif reporte == "ER":
+        storedProc = "EXEC dbo.codigosEstadoresultados @id_empresa = ?"
+    params = (idEmpresa)
+    cursor = init_db()
+    data = []
+    datos = {}
+    resultado = cursor.execute(storedProc, params)
+    rows = cursor.fetchall()
+    for row in rows:
+        data.append(list(row))
+    datos["codes"] = data
+    return datos
+
+def getBalanceCodigos():
+    data = movimientosBalance()
+    codes = getCodigos("BG", 2)
+    result = {}
+    result["codes"] = codes["codes"]
+    result["movimientos"] = data
+    print(result)
+    return result
+
+def getEstadoCodigos():
+    data = estadoResultados()
+    codes = getCodigos("ER", 2)
+    result = {}
+    result["codes"] = codes["codes"]
+    result["movimientos"] = data
+    print(result)
+    return result
