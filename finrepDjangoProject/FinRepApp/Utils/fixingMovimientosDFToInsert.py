@@ -16,10 +16,10 @@ def init_db():
     return cursor
 
 def readXlsxFile(request):
-    print(request.FILES['file'])
-    df = pd.read_excel(request.FILES['file'])
+    print(request.FILES['movimientos'])
+    df = pd.read_excel(request.FILES['movimientos'])
     print (df)
-    df_listo = fix_df(df)
+    df_listo = fix_df(df, request)
     return df_listo
 
 
@@ -70,10 +70,10 @@ def format_date(date):
     new_date = datetimeobject.strftime('%Y-%m-%d')
     return new_date
 
-def fix_df(df):
+def fix_df(df, request):
     global catalogo
-    catalogo = pd.read_excel('catalogo.xlsx')
-
+    catalogo = pd.read_excel(request.FILES['catalogo'])
+    print(catalogo)
 
     df.columns = ['fecha', 'tipo', 'numero', 'concepto', 'referencia', 'cargos', 'abonos', 'saldo']
     catalogo.columns = ['nivel', 'codigo', 'nombre', 'tipo', 'afectable', 'dig', 'edo', 'moneda', 'seg', 'rubro', 'agrupador']
