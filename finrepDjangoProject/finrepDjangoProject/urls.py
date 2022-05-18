@@ -47,6 +47,7 @@ import json as js
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
+router.register('empresas', views.Usuario_EmpresaViewSet, basename='Usuario_EmpresaViewSet')
 # router.register('cuentas', cuentas_list, basename='cuentas-list')
 # recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
 # router.register('xlsx', recibirArchivoPost)
@@ -61,7 +62,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('flutter_web_app/', lambda r: views.flutter_redirect(r, 'index.html')),
     path('flutter_web_app/<path:resource>', views.flutter_redirect),
-    # hola
+    path('contabilidad/reportes/empresas/<int:idEmpresa>/balanceGeneral', views.getMovimientosTest),
+    # path('contabilidad/usuarios/{idUsuario}/empresas', views.Usuario_EmpresaViewSet.as_view),
+    # path('contabilidad/reportes/empresas/', views.getMovimientosTest),
 ]
 
 
