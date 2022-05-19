@@ -36,6 +36,7 @@ import pyodbc
 import json as js
 
 
+
 # cuentas_list = views.Cuentas.as_view({
 #     'get': 'list'
 # })
@@ -65,6 +66,9 @@ urlpatterns = [
     path('contabilidad/reportes/empresas/<int:idEmpresa>/balanceGeneral', views.getMovimientosTest),
     # path('contabilidad/usuarios/{idUsuario}/empresas', views.Usuario_EmpresaViewSet.as_view),
     # path('contabilidad/reportes/empresas/', views.getMovimientosTest),
+    path('register',views.registerUser),
+    path('login',views.login),
+    # hola
 ]
 
 

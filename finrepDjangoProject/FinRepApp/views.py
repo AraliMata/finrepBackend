@@ -5,6 +5,7 @@ from .serializer import *
 from rest_framework import viewsets
 from FinRepApp.Utils.balanceGeneralFormatting import *
 from FinRepApp.Utils.fixingMovimientosDFToInsert import *
+from FinRepApp.Utils.login import *
 # from FinRepApp.Utils.fixingMovimientosDFToInsert import df_listo
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -113,3 +114,13 @@ def uploadMovimientos(request):
 
 def flutter_redirect(request, resource):
     return serve(request, resource, FLUTTER_WEB_APP)
+
+def registerUser(request):
+    resultadini = register(request)
+    return resultadini
+    #print("hola")
+    #user = User.objects.create_user('Funcion', 'exito@hotmail.com', 'sisi')
+    #llamar registro de login.py
+def login(request):
+    loginmarrano = my_view(request)
+    return loginmarrano
