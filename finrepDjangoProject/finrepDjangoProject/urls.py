@@ -60,6 +60,7 @@ router.register('cuentas', views.Cuentas)
 
 urlpatterns = [
     path('balanceGeneral', views.getMovimientos),
+    path('estadoResultados', views.getEstadoResultados),
     path('prueba', views.prueba),
     path('xlsx',views.uploadMovimientos),
     path('', include(router.urls)),
