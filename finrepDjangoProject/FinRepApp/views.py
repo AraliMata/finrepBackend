@@ -2,12 +2,19 @@ from django.shortcuts import render, redirect
 from rest_framework.decorators import APIView
 from FinRepApp.models import Cuentas
 from .serializer import *
+from .serializer import CuentasSerializer
+from .serializer import UserSerializer
 from rest_framework import viewsets
+from rest_framework import status
 from FinRepApp.Utils.balanceGeneralFormatting import *
 from FinRepApp.Utils.fixingMovimientosDFToInsert import *
+from FinRepApp.Utils.login import *
 # from FinRepApp.Utils.fixingMovimientosDFToInsert import df_listo
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
+from django.contrib.auth.models import User
 import json as js
 import os
 from django.views.static import serve
@@ -21,6 +28,7 @@ FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
 class Cuentas(viewsets.ModelViewSet):
     queryset = Cuentas.objects.all()
     serializer_class = CuentasSerializer
+
 
 @api_view(['GET'])
 def prueba(request):
@@ -113,3 +121,13 @@ def uploadMovimientos(request):
 
 def flutter_redirect(request, resource):
     return serve(request, resource, FLUTTER_WEB_APP)
+
+def registerUser(request):
+    resultadini = register(request)
+    return resultadini
+    #print("hola")
+    #user = User.objects.create_user('Funcion', 'exito@hotmail.com', 'sisi')
+    #llamar registro de login.py
+def login(request):
+    loginmarrano = my_view(request)
+    return loginmarrano
