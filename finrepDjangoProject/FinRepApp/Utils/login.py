@@ -15,7 +15,7 @@ def register(request):
         email = datos["email"]
         password = datos["password"]
         user = User.objects.create_user(username, email, password)
-        return HttpResponse()
+        return HttpResponse(status = 201)
 
 #Login del usuario
 def my_view(request):
@@ -28,14 +28,14 @@ def my_view(request):
         print("login exitoso")
         print(user.id)
         #print(password)
-        return HttpResponse()
+        return HttpResponse(status = 202)
         
         # Redirect to a success page.
         #Return exito
         ...
     else:
         print('terrible')
-        return HttpResponse()
+        return HttpResponse(status = 400)
         # Return an 'invalid login' error message.
 
 #Logout
