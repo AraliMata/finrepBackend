@@ -174,3 +174,4 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
 *.pyc
+finrepDjangoProject/finrepDjangoProject/__pycache__/urls.cpython-310.pyc
