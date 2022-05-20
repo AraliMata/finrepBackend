@@ -48,15 +48,12 @@ from rest_framework.authtoken import views as views2
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
-router.register('empresas', views.Usuario_EmpresaViewSet, basename='Usuario_EmpresaViewSet')
-
+# router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet, basename='Usuario_EmpresaViewSet')
+router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
 # router.register('cuentas', cuentas_list, basename='cuentas-list')
 # recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
 # router.register('xlsx', recibirArchivoPost)
 
-router = routers.DefaultRouter(trailing_slash=False)
-router.register('employeedetails', Employee)
-router.register('cuentas', views.Cuentas)
 
 urlpatterns = [
     path('balanceGeneral', views.getMovimientos),

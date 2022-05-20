@@ -11,15 +11,17 @@ from FinRepApp.Utils.balanceGeneralFormatting import *
 from FinRepApp.Utils.estadoResultadosFormatting import *
 from FinRepApp.Utils.fixingMovimientosDFToInsert import *
 from FinRepApp.Utils.login import *
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 # from FinRepApp.Utils.fixingMovimientosDFToInsert import df_listo
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 import json as js
 import os
 from django.views.static import serve
+from rest_framework.decorators import action
 
 
 
@@ -51,10 +53,12 @@ def prueba(request):
     print(json_object)
     return Response(balance)
 
-class Usuario_EmpresaViewSet(viewsets.ViewSet):
+class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Usuario_Empresa.objects.all()
-
-    def retrieve(self, request, pk):
+    lookup_field = 'pk'
+    # @action(methods=['get'], detail=False, url_path='empresas', url_name='empresas')
+    @action(detail=True)
+    def empresas(self, request, pk):
         for e in Usuario_Empresa.objects.all():
             print(e)
         print(pk, "esto es el pk")
@@ -68,23 +72,34 @@ class Usuario_EmpresaViewSet(viewsets.ViewSet):
         # empresas:{"Lecar":1, "Walmart":3, "Ereh":3} , 
         # informaciónStatus: [] 
         # }
-        json = {'empresas':{} , 'status': []}
+
+        """         
+        json = {'empresas':{}}
         # json = {'empresas':{} , 'informacionStatus': []}
         for e in queryset:
-            json['empresas'][e.idEmpresa.nombre] = e.idEmpresa.id
+            json['empresas'][e.idEmpresa.nombre] = e.idEmpresa.id 
+        """
+
+        json = []
+        for e in queryset:
+            json.append({'id':e.idEmpresa.id,'nombre':e.idEmpresa.nombre})
+        return Response(json)
+"""         # json = {'empresas':{} , 'informacionStatus': []}
+        json = {}
+        for e in queryset:
+            json[e.idEmpresa.nombre] = e.idEmpresa.id
             # json['informacionStatus'][e.idEmpresa.nombre] = e.idUsuario.id
             # print(e.idUsuario.id)
-
+ """
         
         # print(queryset.attribute)
         # serializer = Usuario_EmpresaSerializer(queryset, many=True)
         # serializer = Usuario_EmpresaSerializer(queryset)
-        return Response(json)
-        print("jalo?")
-        if serializer.is_valid():
-            print(serializer.data)
-        else:
-            return Response(serializer.errors)
+        # print("jalo?")
+        # if serializer.is_valid():
+        #     print(serializer.data)
+        # else:
+        #     return Response(serializer.errors)
 
 
 
@@ -141,6 +156,10 @@ def registerUser(request):
     #print("hola")
     #user = User.objects.create_user('Funcion', 'exito@hotmail.com', 'sisi')
     #llamar registro de login.py
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def login(request):
     loginmarrano = my_view(request)
-    return loginmarrano
+    return HttpResponse(loginmarrano)
