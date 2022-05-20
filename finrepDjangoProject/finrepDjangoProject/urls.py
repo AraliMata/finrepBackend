@@ -54,9 +54,6 @@ router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
 # recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
 # router.register('xlsx', recibirArchivoPost)
 
-router = routers.DefaultRouter(trailing_slash=False)
-router.register('employeedetails', Employee)
-router.register('cuentas', views.Cuentas)
 
 urlpatterns = [
     path('balanceGeneral', views.getMovimientos),

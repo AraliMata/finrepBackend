@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import json
+from rest_framework.response import Response
+
 
 #user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
 
@@ -15,7 +17,7 @@ def register(request):
         email = datos["email"]
         password = datos["password"]
         user = User.objects.create_user(username, email, password)
-        return HttpResponse()
+        return user
 
 #Login del usuario
 def my_view(request):
@@ -27,8 +29,10 @@ def my_view(request):
         login(request, user)
         print("login exitoso")
         print(user.id)
+        idddd = user.id
         #print(password)
-        return HttpResponse()
+        return idddd
+        # return user.id
         
         # Redirect to a success page.
         #Return exito

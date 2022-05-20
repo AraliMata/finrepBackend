@@ -9,11 +9,12 @@ from rest_framework import status
 from FinRepApp.Utils.balanceGeneralFormatting import *
 from FinRepApp.Utils.fixingMovimientosDFToInsert import *
 from FinRepApp.Utils.login import *
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 # from FinRepApp.Utils.fixingMovimientosDFToInsert import df_listo
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 import json as js
 import os
@@ -142,6 +143,10 @@ def registerUser(request):
     #print("hola")
     #user = User.objects.create_user('Funcion', 'exito@hotmail.com', 'sisi')
     #llamar registro de login.py
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def login(request):
     loginmarrano = my_view(request)
-    return loginmarrano
+    return HttpResponse(loginmarrano)
