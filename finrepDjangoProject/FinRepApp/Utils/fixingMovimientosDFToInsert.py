@@ -4,8 +4,8 @@ from datetime import datetime
 import numpy as np
 
 def init_db():
-    server = 'finrep-server.database.windows.net' 
-    database = 'FinRep-DB' 
+    server = 'finrep-db-server.database.windows.net' 
+    database = 'FinrepDB' 
     username = 'equipoelite' 
     password = 'CoffeeSoft-2022' 
     global cnxn
@@ -51,7 +51,7 @@ def es_agrupador(code):
             return (True, tipo, agrupador)
         elif tipo2.size > 0:
             tipo = tipo2.iat[0, 3]
-            agrupador = tipo1.iat[0, 2]
+            agrupador = tipo2.iat[0, 2]
             return (True, tipo, agrupador)
         elif tipo3.size > 0:
             tipo = tipo3.iat[0, 3]
