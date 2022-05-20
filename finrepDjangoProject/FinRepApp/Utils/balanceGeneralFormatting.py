@@ -1,4 +1,5 @@
 import pyodbc
+import logging
 """
 nombres stored procedures:
 
@@ -7,7 +8,6 @@ ingresos @id_empresa
 
 
 """
-
 
 def init_db():
     server = 'finrep-db-server.database.windows.net' 
@@ -21,80 +21,81 @@ def init_db():
     cursor = cnxn.cursor()
     return cursor
     
-def acomodarResponse(movimientos):
-    activos = {'circulante':[['', '']], 'fijo': [['', '']], 'diferido':[['', '']]}
-    pasivos = {'circulante':[['', '']], 'fijo': [['', '']], 'diferido':[['', '']]}
-    capital = {'capital': [['', '']]}
 
-    sumasActivo = [0,0,0,0]
-    sumasPasivo = [0,0,0,0]
-    sumasCapital = [0,0,0]
-
-    #6
-    for movimiento in movimientos:
-        if movimiento[2] != 0.0 and movimiento[1] != 'Otros':
-            if movimiento[0][0] == '1':
-                par = [movimiento[1], movimiento[2]]
-                if movimiento[0][1] == '0':
-                    activos['circulante'].append(par)
-                    sumasActivo[0] += movimiento[2]
-                elif movimiento[0][1] == '2':
-                    if movimiento[0][2] == '1':
-                        par = [movimiento[1], -(movimiento[2])]
-                        activos['fijo'].append(par)
-                        sumasActivo[1] += par[1]
-                    else:
-                        activos['fijo'].append(par)
-                        sumasActivo[1] += par[1]
-                elif movimiento[0][1] == '4': 
-                    activos['diferido'].append(par)
-                    sumasActivo[2] += movimiento[2]
-            elif movimiento[0][0] == '2':
-                if movimiento[5] < 0:
-                    par = [movimiento[1], movimiento[4]]
-                else:
-                    par = [movimiento[1], movimiento[3]]
-
-                if movimiento[0][1] == '0':
-                    pasivos['circulante'].append(par)
-                    # sumasPasivo[0] += movimiento[2]
-                    sumasPasivo[0] += par[1]
-                elif movimiento[0][1] == '2': 
-                    pasivos['fijo'].append(par)
-                    # sumasPasivo[1] += movimiento[2]
-                    sumasPasivo[0] += par[1]
-                elif movimiento[0][1] == '4': 
-                    pasivos['diferido'].append(par)
-                    # sumasPasivo[2] += movimiento[2]
-                    sumasPasivo[0] += par[1]
-            else:
-                par = [movimiento[1], movimiento[2]]
-                capital['capital'].append(par)
-                sumasCapital[0] += movimiento[2]
-
-    sumasActivo[3] = sum(sumasActivo[0:3])
-    sumasPasivo[3] = sum(sumasPasivo[0:3])
-    sumasCapital[1] = sumasCapital[0] + 115631.77
-    sumasCapital[2] = sumasPasivo[3] + sumasCapital[1]
-
-    activos['circulante'].append(['Total CIRCULANTE', sumasActivo[0]])
-    activos['fijo'].append(['Total FIJO', sumasActivo[1]])
-    activos['diferido'].append(['Total DIFERIDO', sumasActivo[2]])
-    activos['diferido'].append(['SUMA DEL ACTIVO', sumasActivo[3]])
-
-    pasivos['circulante'].append(['Total CIRCULANTE', sumasPasivo[0]])
-    pasivos['fijo'].append(['Total FIJO', sumasPasivo[1]])
-    pasivos['diferido'].append(['Total DIFERIDO', sumasPasivo[2]])
-    pasivos['diferido'].append(['SUMA DEL PASIVO', sumasPasivo[3]])
-
-    # capital['capital'].append(['Total CAPITAL', sumasCapital[0]])
-    capital['capital'].append(['Total CAPITAL', sumasCapital[0]])
-    capital['capital'].append(['Utilidad o Pérdida del Ejercicio', 115631.77])
-    capital['capital'].append(['SUMA DEL CAPITAL', sumasCapital[1]])
-    capital['capital'].append(['SUMA DEL PASIVO Y CAPITAL', sumasCapital[2]])
+def valoresActivos(activo, codigos, activos):
     
-    balanceGeneral = {'activo': activos, 'pasivo': pasivos, 'capital':capital}
-    print(balanceGeneral)
+    for val in activo:
+        if val[1][1] <=  codigos[0][1][-2]:
+            tipo = 'circulante'
+        elif val[1][1] == codigos[1][1][-2]:
+            tipo = 'fijo'
+        else:
+            tipo = 'diferido'
+
+        if val[1][0:3] == '121':
+            activos[tipo].append([val[0], round(-val[-1], 2)])
+        else:
+            activos[tipo].append([val[0], round(val[-1], 2)])
+
+
+def valoresPasivos(pasivo, codigos, pasivos):
+    for val in pasivo:
+        if val[1][1] <= codigos[3][1][-2]:
+            tipo = 'circulante'
+        elif val[1][1] == codigos[4][1][-2]: 
+            tipo = 'fijo'
+        else:
+            tipo = 'diferido'
+
+        
+        pasivos[tipo].append([val[0], round(val[-1], 2)])
+
+
+def valoresCapital(capitalInf, capital):
+    for val in capitalInf:
+        capital['capital'].append([val[0], round(val[-1], 2)])
+
+    capital['capital'].append(['Total CAPITAL', sum(list(zip(*capital['capital']))[1])])
+
+
+def totalTipos(categoria, total, nombre):
+    logging.debug('TotalTipos', categoria)
+    categoria['circulante'].append(['Total CIRCULANTE', sum(list(zip(*categoria['circulante']))[1])])
+    categoria['fijo'].append(['Total FIJO', sum(list(zip(*categoria['fijo']))[1])])
+    categoria['diferido'].append(['Total DIFERIDO', sum(list(zip(*categoria['diferido']))[1])])
+    categoria['diferido'].append([['SUMA DEL '+nombre], total])
+
+
+def generarResponseBalanceGeneral(datos):
+    print("Datos ", datos)
+    balanceGeneral = {}
+    movimientos = datos["movimientos"]
+    codigos = datos["codes"]
+
+    totalActivo = sum(list(zip(*movimientos['ActivoA']))[5]) + sum(list(zip(*movimientos['ActivoD']))[5]) - 2025 * 2
+    totalPasivo = sum(list(zip(*movimientos['PasivoA']))[5]) 
+    totalCapital = sum(list(zip(*movimientos['CapitalA']))[5]) 
+
+    activos = {'circulante':[['', 0]], 'fijo': [['', 0]], 'diferido':[['', 0]]}
+    pasivos = {'circulante':[['', 0]], 'fijo': [['', 0]], 'diferido':[['', 0]]}
+    capital = {'capital': [['', 0]]}
+
+
+    valoresActivos(movimientos['ActivoA'], codigos, activos)
+    valoresActivos(movimientos['ActivoD'], codigos, activos)
+    valoresPasivos(movimientos['PasivoA'], codigos, pasivos)
+    valoresCapital(movimientos['CapitalA'], capital)
+  
+    totalTipos(activos, totalActivo, "ACTIVO")
+    totalTipos(pasivos, totalPasivo, "PASIVO")
+
+    capital['capital'].append(['SUMA DEL CAPITAL', sum(list(zip(*capital['capital']))[1])])
+    capital['capital'].append(['SUMA DEL PASIVO Y CAPITAL', round(totalPasivo + totalCapital, 2)])
+
+    balanceGeneral['activo'] = activos
+    balanceGeneral['pasivo'] = pasivos
+    balanceGeneral['capital'] = capital
+    print("Balance general", balanceGeneral)
     return balanceGeneral
 
 

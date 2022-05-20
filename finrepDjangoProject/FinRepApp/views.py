@@ -1,9 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import APIView
 from FinRepApp.models import Cuentas
 from .serializer import *
 from rest_framework import viewsets
 from FinRepApp.Utils.balanceGeneralFormatting import *
+from FinRepApp.Utils.estadoResultadosFormatting import *
 from FinRepApp.Utils.fixingMovimientosDFToInsert import *
 # from FinRepApp.Utils.fixingMovimientosDFToInsert import df_listo
 from rest_framework.decorators import api_view
@@ -21,6 +23,18 @@ FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
 class Cuentas(viewsets.ModelViewSet):
     queryset = Cuentas.objects.all()
     serializer_class = CuentasSerializer
+
+@api_view(['GET'])
+def getMovimientos(request):
+    init_db()
+    balance = getBalanceCodigos()
+    balanceGeneral = generarResponseBalanceGeneral(balance)
+    # Serializing json  
+    print("Balance: ", balanceGeneral)
+    json_object = js.dumps(balanceGeneral)
+    print(json_object) 
+ 
+    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("latin1"), content_type="application/json")
 
 @api_view(['GET'])
 def prueba(request):
@@ -64,22 +78,21 @@ class Usuario_EmpresaViewSet(viewsets.ViewSet):
         else:
             return Response(serializer.errors)
 
+
+
+
 @api_view(['GET'])
-def getMovimientos(request):
+def getEstadoResultados(request):
+
     init_db()
-    dictionary ={ 
-    "id": "04", 
-    "name": "sunil", 
-    "department": "HR"
-    } 
-    balanceGeneral = acomodarResponse(movimientoshacker())
+    
+    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos())
     # Serializing json  
-    json_object = js.dumps(balanceGeneral) 
-    print(json_object)
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
-    return Response(json_object)
+    return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json")
+
 
 @api_view(['GET'])
 def getMovimientosTest(request,idEmpresa):
@@ -90,9 +103,9 @@ def getMovimientosTest(request,idEmpresa):
     "name": "sunil", 
     "department": "HR"
     } 
-    balanceGeneral = acomodarResponse(movimientoshacker())
+    balanceGeneral = []
     # Serializing json  
-    json_object = js.dumps(balanceGeneral) 
+    json_object = js.dumps(balanceGeneral, sort_keys=True) 
     print(json_object)
 
     #print(json, "JSON")
