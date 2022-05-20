@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'backendEmployeeTest',
     'FinRepApp',
+    'typing_extensions',
     #hola
 ]
 

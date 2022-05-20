@@ -71,9 +71,9 @@ urlpatterns = [
     # path('contabilidad/reportes/empresas/', views.getMovimientosTest),
     path('register',views.registerUser),
     path('login',views.login),
-    path('user/', views.UserRecordView.as_view(), name='users'),
+    #path('user/', views.UserRecordView.as_view(), name='users'),
     #path('api/', include('api.urls', namespace='api')),
-    path('api-token-auth/', views2.obtain_auth_token, name='api-token-auth'),
+    #path('api-token-auth/', views2.obtain_auth_token, name='api-token-auth'),
 ]
 
 
