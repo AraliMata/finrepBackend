@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 def register(request):
     if request.method == 'POST':
         print("saludos")
-        user = User.objects.create_user('Raulperez', 'caca@hotmail.com', 'sisi')
+        user = User.objects.create_user('isaac', 'raulchencho@hotmail.com', 'sisi')
 
 #Login del usuario
 def my_view(request):
@@ -18,6 +18,7 @@ def my_view(request):
     if user is not None:
         login(request, user)
         print("login exitoso")
+        print(user.id)
         # Redirect to a success page.
         #Return exito
         ...
