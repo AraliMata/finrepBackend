@@ -149,4 +149,4 @@ def registerUser(request):
 # @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def login(request):
     loginmarrano = my_view(request)
-    return HttpResponse(loginmarrano)
+    return loginmarrano
