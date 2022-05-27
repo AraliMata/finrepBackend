@@ -1,6 +1,6 @@
 from operator import truediv
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 from django.db import models
 
@@ -20,7 +20,7 @@ class Empresa(models.Model):
         db_table = "empresa"
 
 class Usuario_Empresa(models.Model):
-    idUsuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    idUsuario = models.ForeignKey(User, on_delete=models.CASCADE)
     idEmpresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
 
     class Meta:
