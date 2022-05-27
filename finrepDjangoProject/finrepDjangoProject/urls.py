@@ -59,7 +59,7 @@ urlpatterns = [
     path('balanceGeneral', views.getMovimientos),
     path('estadoResultados', views.getEstadoResultados),
     path('prueba', views.prueba),
-    path('xlsx',views.uploadMovimientos),
+    path('contabilidad/reportes/empresas/<int:idEmpresa>/subir-archivos',views.uploadMovimientos),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('flutter_web_app/', lambda r: views.flutter_redirect(r, 'index.html')),

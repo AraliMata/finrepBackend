@@ -29,9 +29,10 @@ def my_view(request):
         login(request, user)
         print("login exitoso")
         print(user.id)
-        idddd = user.id
+        userId = user.id
         #print(password)
-        return idddd
+        return HttpResponse(userId,status=202)
+        # return idddd
         # return user.id
         
         # Redirect to a success page.

@@ -141,8 +141,8 @@ def getEmpresas(request,idUsuario):
 
 
 @api_view(['POST'])
-def uploadMovimientos(request):
-    df_listo = readXlsxFile(request)
+def uploadMovimientos(request,idEmpresa):
+    df_listo = readXlsxFile(request,idEmpresa)
     init_db()
     insertInDatabase(df_listo)
     return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
@@ -162,4 +162,4 @@ def registerUser(request):
 # @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def login(request):
     loginmarrano = my_view(request)
-    return HttpResponse(loginmarrano)
+    return loginmarrano
