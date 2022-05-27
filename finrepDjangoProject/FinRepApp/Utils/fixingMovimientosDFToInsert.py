@@ -15,11 +15,11 @@ def init_db():
     cursor = cnxn.cursor()
     return cursor
 
-def readXlsxFile(request):
+def readXlsxFile(request,idEmpresa):
     print(request.FILES['movimientos'])
     df = pd.read_excel(request.FILES['movimientos'])
     print (df)
-    df_listo = fix_df(df, request)
+    df_listo = fix_df(df, request,idEmpresa)
     return df_listo
 
 
@@ -70,7 +70,7 @@ def format_date(date):
     new_date = datetimeobject.strftime('%Y-%m-%d')
     return new_date
 
-def fix_df(df, request):
+def fix_df(df, request,idEmpresa):
     global catalogo
     catalogo = pd.read_excel(request.FILES['catalogo'])
     print(catalogo)
@@ -102,7 +102,7 @@ def fix_df(df, request):
                 current_name = row[2]
                 current_saldoi = row[8]
                 fecha_inicial = datetime(2016, 6, 1)
-                temp_df = {'id_empresa': 2, 'codigo': current_code, 'codigo_agrupador': current_agrupador, 'nombre': current_name,'nombre_grupo': current_nombreG,'tipo': "", 'APC': current_APC, 'fecha': '2016-06-01', 'concepto': '', 'referencia': '', 'cargos': 0.0, 'abonos': 0.0, 'saldo': 0.0, 'saldo_inicial': current_saldoi}
+                temp_df = {'id_empresa': idEmpresa, 'codigo': current_code, 'codigo_agrupador': current_agrupador, 'nombre': current_name,'nombre_grupo': current_nombreG,'tipo': "", 'APC': current_APC, 'fecha': '2016-06-01', 'concepto': '', 'referencia': '', 'cargos': 0.0, 'abonos': 0.0, 'saldo': 0.0, 'saldo_inicial': current_saldoi}
                 new_df = new_df.append(temp_df, ignore_index=True)
 
             elif (is_valid(row)):
@@ -123,7 +123,7 @@ def fix_df(df, request):
                 else:
                     saldo = row[8]
 
-                temp_df = {'id_empresa': 2, 'codigo': current_code, 'codigo_agrupador': current_agrupador, 'nombre': current_name,'nombre_grupo': current_nombreG,'tipo': row[2],'APC': current_APC, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': cargos, 'abonos': abonos, 'saldo': saldo, 'saldo_inicial': current_saldoi}
+                temp_df = {'id_empresa': idEmpresa, 'codigo': current_code, 'codigo_agrupador': current_agrupador, 'nombre': current_name,'nombre_grupo': current_nombreG,'tipo': row[2],'APC': current_APC, 'fecha': new_date, 'concepto': row[4], 'referencia': row[5], 'cargos': cargos, 'abonos': abonos, 'saldo': saldo, 'saldo_inicial': current_saldoi}
                 new_df = new_df.append(temp_df, ignore_index=True)
 
         else:
