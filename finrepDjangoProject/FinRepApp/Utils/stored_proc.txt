@@ -1,0 +1,104 @@
+-- STORED PROCEDURES
+
+-- Create a new stored procedure called 'ingresosMes' in schema 'dbo'
+-- Drop the stored procedure if it already exists
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'ingresosMes'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.ingresosMes
+GO
+-- Create the stored procedure in the specified schema
+CREATE PROCEDURE dbo.ingresosMes
+    @id_empresa /*parameter name*/ int /*datatype_for_param1*/ = 0, /*default_value_for_param1*/
+    @fecha_input /*parameter name*/ int /*datatype_for_param1*/ = 0 /*default_value_for_param2*/
+-- add more stored procedure parameters here
+AS
+BEGIN
+    -- body of the stored procedure
+    SELECT t1.nombreAgrupador, t2.saldoInicial - t1.cargos + t1.abonos as periodo
+    FROM 
+    (select nombreAgrupador, sum(cargos) as cargos, sum(abonos) as abonos from movimientos where tipo='H Resultados Acreedora' and idEmpresa_id = 2 group by nombreAgrupador) t1
+
+    JOIN 
+    (SELECT nombreAgrupador, saldoInicial from movimientos where  tipo='H Resultados Acreedora' and (saldoInicial != 0) and idEmpresa_id = 2 and codigo=codigoAgrupador and MONTH(fecha) = @fecha_input group by nombreAgrupador, saldoInicial) t2
+    ON (t1.nombreAgrupador=t2.nombreAgrupador)
+
+    END
+GO
+-- example to execute the stored procedure we just created
+EXECUTE dbo.ingresosMes 2 /*value_for_param1*/, 6 /*value_for_param2*/
+GO
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Create a new stored procedure called 'ingresosInicial' in schema 'dbo'
+-- Drop the stored procedure if it already exists
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'ingresosInicial'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.ingresosInicial
+GO
+-- Create the stored procedure in the specified schema
+CREATE PROCEDURE dbo.ingresosInicial
+    @id_empresa /*parameter name*/ int /*datatype_for_param1*/ = 0, /*default_value_for_param1*/
+    @fecha_input /*parameter name*/ date /*datatype_for_param1*/ = '2016-06-01' /*default_value_for_param2*/
+-- add more stored procedure parameters here
+AS
+BEGIN
+    -- body of the stored procedure
+    SELECT t2.saldoInicial - t1.cargos + t1.abonos as acumulado, t2.saldoInicial
+    FROM 
+    (select nombreAgrupador, sum(cargos) as cargos, sum(abonos) as abonos from movimientos where tipo='H Resultados Acreedora' and idEmpresa_id = 2 and YEAR(fecha)= YEAR(@fecha_input) group by nombreAgrupador) t1
+
+    JOIN 
+    (SELECT nombreAgrupador, saldoInicial, min(fecha) as fecha from movimientos where  tipo='H Resultados Acreedora' and (saldoInicial != 0) and idEmpresa_id = 2 and codigo=codigoAgrupador and YEAR(fecha) =YEAR(@fecha_input) group by nombreAgrupador, saldoInicial) t2
+    ON (t1.nombreAgrupador=t2.nombreAgrupador)
+
+    END
+GO
+-- example to execute the stored procedure we just created
+EXECUTE dbo.ingresosInicial 2 /*value_for_param1*/, '2016-06-01' /*value_for_param2*/
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Create a new stored procedure called 'ingresosPeriodo' in schema 'dbo'
+-- Drop the stored procedure if it already exists
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'ingresosPeriodo'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.ingresosPeriodo
+GO
+-- Create the stored procedure in the specified schema
+CREATE PROCEDURE dbo.ingresosPeriodo
+    @id_empresa /*parameter name*/ int /*datatype_for_param1*/ = 0, /*default_value_for_param1*/
+    @fecha_input /*parameter name*/ date /*datatype_for_param1*/ = '2016-06-01' /*default_value_for_param2*/
+-- add more stored procedure parameters here
+AS
+BEGIN
+    EXECUTE dbo.ingresosInicial 2 /*value_for_param1*/ /*value_for_param2*/  
+    EXECUTE dbo.ingresosMes 2 /*value_for_param1*/ /*value_for_param2*/   
+
+END
+GO
+-- example to execute the stored procedure we just created
+EXECUTE dbo.ingresosPeriodo 2 /*value_for_param1*/, '2016-06-01' /*value_for_param2*/
+GO
+
