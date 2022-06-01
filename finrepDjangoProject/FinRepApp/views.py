@@ -35,9 +35,9 @@ class Cuentas(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
-def getMovimientos(request):
+def getMovimientos(request,idEmpresa):
     init_db()
-    balance = getBalanceCodigos()
+    balance = getBalanceCodigos(idEmpresa)
     balanceGeneral = generarResponseBalanceGeneral(balance)
     # Serializing json  
     print("Balance: ", balanceGeneral)
@@ -105,11 +105,11 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @api_view(['GET'])
-def getEstadoResultados(request):
+def getEstadoResultados(request,idEmpresa):
 
     init_db()
     
-    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos())
+    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos(idEmpresa))
     # Serializing json  
 
     #print(json, "JSON")

@@ -99,12 +99,12 @@ def generarResponseBalanceGeneral(datos):
     return balanceGeneral
 
 
-def movimientosBalance():
+def movimientosBalance(idEmpresa):
     storedProc = {"PasivoA": "EXEC dbo.GetBalancePasivoAcreedora @empresaID = ?", 
     "ActivoA": "EXEC dbo.GetBalanceActivoAcreedora @empresaID = ?",
     "ActivoD": "EXEC dbo.GetBalanceActivoDeudora @empresaID = ?",
     "CapitalA": "EXEC dbo.GetBalanceCapitalAcreedora @empresaID = ?"}
-    params = (2)
+    params = (idEmpresa)
 
     cursor = init_db()
     data = []
@@ -121,10 +121,10 @@ def movimientosBalance():
     print(datos)
     return datos
 
-def estadoResultados():
+def estadoResultados(idEmpresa):
     storedProc = {"ingresos": "EXEC dbo.ingresos @id_empresa = ?", "egresos": "EXEC dbo.egresos @id_empresa = ?"}
 
-    params = (2)
+    params = (idEmpresa)
     cursor = init_db()
     data = []
     datos = {}
@@ -156,18 +156,18 @@ def getCodigos(reporte, idEmpresa):
     datos["codes"] = data
     return datos
 
-def getBalanceCodigos():
-    data = movimientosBalance()
-    codes = getCodigos("BG", 2)
+def getBalanceCodigos(idEmpresa):
+    data = movimientosBalance(idEmpresa)
+    codes = getCodigos("BG", idEmpresa)
     result = {}
     result["codes"] = codes["codes"]
     result["movimientos"] = data
     print(result)
     return result
 
-def getEstadoCodigos():
-    data = estadoResultados()
-    codes = getCodigos("ER", 2)
+def getEstadoCodigos(idEmpresa):
+    data = estadoResultados(idEmpresa)
+    codes = getCodigos("ER", idEmpresa)
     result = {}
     result["codes"] = codes["codes"]
     result["movimientos"] = data
