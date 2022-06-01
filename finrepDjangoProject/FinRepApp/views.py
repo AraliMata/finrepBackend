@@ -48,7 +48,7 @@ def getMovimientos(request,idEmpresa):
 
 @api_view(['GET'])
 def prueba(request):
-    balance = getEstadoCodigos()
+    balance = getEstadoPeriodo(2)
     json_object = js.dumps(balance)
     print(json_object)
     return Response(balance)

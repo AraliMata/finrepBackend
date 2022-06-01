@@ -1,3 +1,4 @@
+from datetime import date
 import pyodbc
 import logging
 """
@@ -139,6 +140,28 @@ def estadoResultados(idEmpresa):
     print(datos)
     return datos
 
+def estadoResultadosPeriodo(date_input):
+    date_input = '2016-06-01'
+    storedProc = {"ingresosInicial": "EXEC dbo.ingresosInicial @id_empresa = ?, @fecha_input = ?", 
+    "ingresosPeriodo": "EXEC dbo.ingresosMes @id_empresa = ?, @fecha_input = ?",
+    "egresosInicial": "EXEC dbo.egresosInicial @id_empresa = ?, @fecha_input = ?", 
+    "egresosPeriodo": "EXEC dbo.egresosMes @id_empresa = ?, @fecha_input = ?"}
+    params = (2, date_input)
+    cursor = init_db()
+    data = []
+    datos = {}
+    for tipo in storedProc:
+        resultado = cursor.execute(storedProc[tipo], params)
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(list(row))
+        datos[tipo] = data
+        data = []
+
+    print(datos)
+    return datos
+
+
 
 def getCodigos(reporte, idEmpresa):
     if reporte == "BG":
@@ -173,3 +196,14 @@ def getEstadoCodigos(idEmpresa):
     result["movimientos"] = data
     print(result)
     return result
+
+
+def getEstadoPeriodo(date_input):
+    data = estadoResultadosPeriodo(date_input)
+    codes = getCodigos("ER", 2)
+    result = {}
+    result["codes"] = codes["codes"]
+    result["movimientos"] = data
+    print(result)
+    return result
+
