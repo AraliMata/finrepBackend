@@ -138,7 +138,7 @@ def getMovimientosTest(request,idEmpresa):
     return Response(json_object)
 
 @api_view(['GET'])
-def getRelacionesAnaliticas(request):
+def getRelacionesAnaliticas(request,idEmpresa):
 
     init_db()
     
