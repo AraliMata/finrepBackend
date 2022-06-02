@@ -95,7 +95,8 @@ def valoresActivos(activo, codigos, activos, codigosIndices, deudora, agrupadore
     saldoInicial = {'circulante':0, 'fijo':0, 'diferido':0}
 
     for val in activo:
-        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), "se", dA]
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1][1] <=  codigos[c][1][2]:
             tipo = 'circulante'
         elif val[1][1] == codigos[f][1][-2]:
@@ -107,11 +108,9 @@ def valoresActivos(activo, codigos, activos, codigosIndices, deudora, agrupadore
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+
+        estilo = "se"
 
         saldoInicial[tipo] += valor[2]  #Saldo inicial
         activos[tipo][0][3] += valor[3] #Cargos
@@ -131,7 +130,10 @@ def valoresPasivos(pasivo, codigos, pasivos, codigosIndices, deudora, agrupadore
     dA = "d" if deudora else "a"
     estilo = "sq"
     saldoInicial = {'circulante':0, 'fijo':0, 'diferido':0}
+
     for val in pasivo:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1][1] <= codigos[c][1][-2]:
             tipo = 'circulante'
         elif val[1][1] == codigos[f][1][-2]: 
@@ -143,12 +145,9 @@ def valoresPasivos(pasivo, codigos, pasivos, codigosIndices, deudora, agrupadore
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+           
+        estilo = "se"
 
         saldoInicial[tipo] += valor[2] #Saldo inicial
         pasivos[tipo][0][3] += valor[3] #Cargos
@@ -167,17 +166,16 @@ def valoresGeneral(datos, resultados, agrupadoresDatos, deudora, tipo):
     estilo = "se"
     saldoInicial, cargos, abonos = 0, 0, 0
     for val in datos:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1] == val[2]:
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
                 valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        
+           
+        estilo = "se"
+
         resultados.append(valor)
         saldoInicial += valor[2]
         cargos += valor[3]
@@ -193,16 +191,15 @@ def valoresCapital(datos, resultados, agrupadoresDatos, deudora):
     estilo = "se"
     saldoInicial, cargos, abonos = 0, 0, 0
     for val in datos:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1] == val[2]:
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+           
+        estilo = "se"    
         
         resultados.append(valor)
         saldoInicial += valor[2]
