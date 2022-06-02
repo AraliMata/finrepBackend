@@ -23,9 +23,22 @@ def readXlsxFile(request,idEmpresa):
     return df_listo
 
 
-def insertInDatabase(df):
+def insertInDatabase(df,idEmpresa):
     cursor = init_db()
     print("HOLA MAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    print(catalogo)
+    print (catalogo.loc[lambda catalogo: catalogo['nivel'] == 1])
+    # print (catalogo.loc[catalogo['nivel'] == '1'])
+    for row in catalogo.loc[lambda catalogo: catalogo['nivel'] == 1].iterrows():
+        cur = row[1]
+        print(cur['codigo'])
+        # print(row.nivel)
+        cursor.execute("BEGIN IF NOT EXISTS (SELECT * FROM dbo.codigos_agrupadores WHERE codigo = ? AND idEmpresa_id = ?) BEGIN INSERT INTO dbo.codigos_agrupadores VALUES (?, ?, ?, ?) END END", cur['codigo'], idEmpresa, cur['codigo'], cur['tipo'], idEmpresa, cur['nombre'])
+        
+    for row in catalogo.loc[lambda catalogo: catalogo['nivel'] == 2].iterrows():
+        cur = row[1]
+        cursor.execute("BEGIN IF NOT EXISTS (SELECT * FROM dbo.codigos_agrupadores WHERE codigo = ? AND idEmpresa_id = ?) BEGIN INSERT INTO dbo.codigos_agrupadores VALUES (?, ?, ?, ?) END END", cur['codigo'], idEmpresa, cur['codigo'], cur['tipo'], idEmpresa, cur['nombre'])
+        
     for index, row in df.iterrows():
         # print(row)
         # print(row.id_empresa," ", row.codigo," ", row.nombre," ", row.concepto," ", row.referencia," ", float(row.saldo_inicial)," ", float(row.cargos)," ", float(row.abonos)," ", row.fecha)

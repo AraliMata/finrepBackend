@@ -144,7 +144,7 @@ def getEmpresas(request,idUsuario):
 def uploadMovimientos(request,idEmpresa):
     df_listo = readXlsxFile(request,idEmpresa)
     init_db()
-    insertInDatabase(df_listo)
+    insertInDatabase(df_listo,idEmpresa)
     return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
 
 def flutter_redirect(request, resource):
