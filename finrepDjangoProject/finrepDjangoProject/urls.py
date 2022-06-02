@@ -58,6 +58,7 @@ router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
 urlpatterns = [
     path('balanceGeneral', views.getMovimientos),
     path('estadoResultados', views.getEstadoResultados),
+    path('relacionesAnaliticas', views.getRelacionesAnaliticas),
     path('prueba', views.prueba),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/subir-archivos',views.uploadMovimientos),
     path('', include(router.urls)),
