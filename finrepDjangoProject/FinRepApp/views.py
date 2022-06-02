@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import APIView
+from FinRepApp.Utils.relacionesAnaliticasFormatting import generarResponseRelacionesAnaliticas, getRelacionesCuentasMovimientos
 from FinRepApp.models import Cuentas
 from .serializer import *
 from .serializer import CuentasSerializer
@@ -117,6 +118,7 @@ def getEstadoResultados(request,idEmpresa):
     return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json")
 
 
+
 @api_view(['GET'])
 def getMovimientosTest(request,idEmpresa):
     print(idEmpresa, "esto es el idEmpresa")
@@ -134,6 +136,18 @@ def getMovimientosTest(request,idEmpresa):
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
     return Response(json_object)
+
+@api_view(['GET'])
+def getRelacionesAnaliticas(request,idEmpresa):
+
+    init_db()
+    
+    relacionesAnaliticas = generarResponseRelacionesAnaliticas(getRelacionesCuentasMovimientos(1))
+    # Serializing json  
+
+    #print(json, "JSON")
+    # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
+    return HttpResponse(js.dumps(relacionesAnaliticas, ensure_ascii=False).encode("utf-8"), content_type="application/json")
 
 @api_view(['GET'])
 def getEmpresas(request,idUsuario):
