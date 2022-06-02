@@ -36,9 +36,9 @@ class Cuentas(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
-def getMovimientos(request):
+def getMovimientos(request,idEmpresa):
     init_db()
-    balance = getBalanceCodigos()
+    balance = getBalanceCodigos(idEmpresa)
     balanceGeneral = generarResponseBalanceGeneral(balance)
     # Serializing json  
     print("Balance: ", balanceGeneral)
@@ -49,7 +49,7 @@ def getMovimientos(request):
 
 @api_view(['GET'])
 def prueba(request):
-    balance = getEstadoCodigos()
+    balance = getEstadoPeriodo(2)
     json_object = js.dumps(balance)
     print(json_object)
     return Response(balance)
@@ -106,11 +106,11 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @api_view(['GET'])
-def getEstadoResultados(request):
+def getEstadoResultados(request,idEmpresa):
 
     init_db()
     
-    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos())
+    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos(idEmpresa))
     # Serializing json  
 
     #print(json, "JSON")
