@@ -49,7 +49,7 @@ def getMovimientos(request,idEmpresa):
 
 @api_view(['GET'])
 def prueba(request):
-    balance = getEstadoPeriodo(2)
+    balance = movimientosBalanceMes(2, '2016-06-01')
     json_object = js.dumps(balance)
     print(json_object)
     return Response(balance)
