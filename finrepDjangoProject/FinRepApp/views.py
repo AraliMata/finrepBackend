@@ -110,7 +110,7 @@ def getEstadoResultados(request,idEmpresa):
 
     init_db()
     
-    estadoResultados = generarResponseEstadoResultados(getEstadoCodigos(idEmpresa))
+    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa))
     # Serializing json  
 
     #print(json, "JSON")
