@@ -106,7 +106,7 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @api_view(['GET'])
-def getEstadoResultados(request,idEmpresa,date_input):
+def getEstadoResultados(request,idEmpresa,date_input='2016-06-01'):
 
     init_db()
     
