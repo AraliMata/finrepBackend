@@ -122,6 +122,28 @@ def movimientosBalance(idEmpresa):
     print(datos)
     return datos
 
+def movimientosBalanceMes(idEmpresa, date_input):
+    storedProc = {"PasivoA": "EXEC dbo.GetBalancePasivoAcreedoraMes @empresaID = ?, @fecha_input = ?", 
+    "ActivoA": "EXEC dbo.GetBalanceActivoAcreedoraMes @empresaID = ?, @fecha_input = ?",
+    "ActivoD": "EXEC dbo.GetBalanceActivoDeudoraMes @empresaID = ?, @fecha_input = ?",
+    "CapitalA": "EXEC dbo.GetBalanceCapitalAcreedoraMes @empresaID = ?, @fecha_input = ?"}
+    params = (idEmpresa, date_input)
+
+    cursor = init_db()
+    data = []
+    datos = {}
+
+    for tipo in storedProc:
+        resultado = cursor.execute(storedProc[tipo], params)
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(list(row))
+        datos[tipo] = data
+        data = []
+
+    print(datos)
+    return datos
+
 def estadoResultados(idEmpresa):
     storedProc = {"ingresos": "EXEC dbo.ingresos @id_empresa = ?", "egresos": "EXEC dbo.egresos @id_empresa = ?"}
 
