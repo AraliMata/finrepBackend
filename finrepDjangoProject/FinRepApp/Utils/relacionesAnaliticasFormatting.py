@@ -51,7 +51,7 @@ def getCodigosRA(idEmpresa):
     return datos
 
 
-def movimientosRelacionesAnaliticas(empresaID):
+def movimientosRelacionesAnaliticas(idEmpresa):
     storedProc = {"ActivoDeudora": "EXEC dbo.GetRAActivoDeudora @empresaID = ?",
     "ActivoAcreedora": "EXEC dbo.GetRAActivoAcreedor @empresaID = ?",
     "PasivoDeudora": "EXEC dbo.GetRAPasivoDeudora @empresaID = ?",
@@ -61,7 +61,7 @@ def movimientosRelacionesAnaliticas(empresaID):
     "RAcreedora": "EXEC dbo.GetRelacionesAnaliticasRAcreedora @empresaID = ?",
     "RDeudora": "EXEC dbo.GetRelacionesAnaliticasRDedudora @empresaID = ?"
     }
-    params = (empresaID)
+    params = (idEmpresa)
 
     cursor = init_db()
     data = []
@@ -79,10 +79,10 @@ def movimientosRelacionesAnaliticas(empresaID):
     return datos
 
 
-def getRelacionesCuentasMovimientos(idEmpresa):
-    cuentas = movimientosBalance(1)
+def getRelacionesCuentasMovimientos(idEmpresa=2):
+    cuentas = movimientosBalance(idEmpresa)
     movimientos = movimientosRelacionesAnaliticas(idEmpresa)
-    codes = getCodigosRA(2)
+    codes = getCodigosRA(idEmpresa)
     result = {}
     result["codes"] = codes["codes"]
     result["cuentas"] = cuentas
