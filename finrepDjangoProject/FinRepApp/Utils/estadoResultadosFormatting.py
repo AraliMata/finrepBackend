@@ -35,9 +35,10 @@ def valoresEgresos(egresosPeriodo, egresosAcumulado, clasificaciones, totalIngre
 
         for clasificacion in clasificaciones:
             if egresosPeriodo[i][3][0:3] == clasificacion[0][0:3]: 
+                
                 clasificacion[3].append([egresosPeriodo[i][0], periodo, porcentajeP, acumulado, porcentajeA])
                 clasificacion[2] += periodo 
-                clasificacion[4] += periodo 
+                clasificacion[4] += acumulado
     
         #egresos.append([egreso[2], periodo, porcentaje, periodo, porcentaje])
 
@@ -126,7 +127,7 @@ def estadoResultadosPeriodo(idEmpresa=2, date_input='2016-06-01'):
     return datos
 
 def getEstadoPeriodo(idEmpresa, date_input='2016-06-01'):
-    data = estadoResultadosPeriodo(date_input)
+    data = estadoResultadosPeriodo(idEmpresa, date_input)
     codes = getCodigos("ER", idEmpresa)
     result = {}
     result["codes"] = codes["codes"]
