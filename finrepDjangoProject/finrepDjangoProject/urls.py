@@ -56,12 +56,13 @@ router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
 
 
 urlpatterns = [
-    path('contabilidad/reportes/empresas/<int:idEmpresa>/balance-general', views.getMovimientos),
+    path('contabilidad/reportes/empresas/<int:idEmpresa>/<int:date_input>/balance-general', views.getMovimientos),
     # path('contabilidad/reportes/empresas/<int:idEmpresa>/estado-resultados/<slug:date_input>', views.getEstadoResultados),
-    path('contabilidad/reportes/empresas/<int:idEmpresa>/estado-resultados', views.getEstadoResultados),
+    path('contabilidad/reportes/empresas/<int:idEmpresa>/<int:date_input>/estado-resultados', views.getEstadoResultados),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/relaciones-analiticas', views.getRelacionesAnaliticas),
     path('prueba', views.prueba),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/subir-archivos',views.uploadMovimientos),
+    path('/contabilidad/empresas/$idEmpresa/meses-disponibles', views.getMeses),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('flutter_web_app/', lambda r: views.flutter_redirect(r, 'index.html')),

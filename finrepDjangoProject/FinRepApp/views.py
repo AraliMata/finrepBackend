@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import APIView
 from FinRepApp.Utils.relacionesAnaliticasFormatting import generarResponseRelacionesAnaliticas, getRelacionesCuentasMovimientos
+from FinRepApp.Utils.periodos import mesesDispoibles
 from FinRepApp.models import Cuentas
 from .serializer import *
 from .serializer import CuentasSerializer
@@ -36,9 +37,10 @@ class Cuentas(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
-def getMovimientos(request,idEmpresa):
+def getMovimientos(request,idEmpresa, date_input):
     init_db()
-    balance = getBalanceCodigos(idEmpresa)
+
+    balance = getBalanceCodigos(idEmpresa, date_input)
     balanceGeneral = generarResponseBalanceGeneral(balance)
     # Serializing json  
     print("Balance: ", balanceGeneral)
@@ -106,17 +108,31 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @api_view(['GET'])
-def getEstadoResultados(request,idEmpresa,date_input='2016-06-01'):
+def getEstadoResultados(request,idEmpresa,date_input=6):
+    if date_input < 10:
+        string = '0'+str(date_input)
+    else:
+        string = str(date_input)
+    fecha = '2016-'+string+'-01'
 
     init_db()
     
-    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa,date_input))
+    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa,fecha))
     # Serializing json  
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
     return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json")
 
+
+@api_view(['GET'])
+def getMeses(request):
+
+    init_db()
+    
+    meses = generarResponseEstadoResultados(mesesDispoibles())
+  
+    return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json")
 
 
 @api_view(['GET'])
