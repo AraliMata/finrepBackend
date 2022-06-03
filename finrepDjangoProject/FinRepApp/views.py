@@ -142,7 +142,7 @@ def getRelacionesAnaliticas(request,idEmpresa):
 
     init_db()
     
-    relacionesAnaliticas = generarResponseRelacionesAnaliticas(getRelacionesCuentasMovimientos(1))
+    relacionesAnaliticas = generarResponseRelacionesAnaliticas(getRelacionesCuentasMovimientos(idEmpresa))
     # Serializing json  
 
     #print(json, "JSON")
