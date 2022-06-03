@@ -106,11 +106,11 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @api_view(['GET'])
-def getEstadoResultados(request,idEmpresa):
+def getEstadoResultados(request,idEmpresa,date_input):
 
     init_db()
     
-    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa))
+    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa,date_input))
     # Serializing json  
 
     #print(json, "JSON")

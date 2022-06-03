@@ -57,7 +57,7 @@ router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
 
 urlpatterns = [
     path('contabilidad/reportes/empresas/<int:idEmpresa>/balance-general', views.getMovimientos),
-    path('contabilidad/reportes/empresas/<int:idEmpresa>/estado-resultados', views.getEstadoResultados),
+    path('contabilidad/reportes/empresas/<int:idEmpresa>/estado-resultados/<string:date_input>', views.getEstadoResultados),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/relaciones-analiticas', views.getRelacionesAnaliticas),
     path('prueba', views.prueba),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/subir-archivos',views.uploadMovimientos),
