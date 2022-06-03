@@ -179,8 +179,14 @@ def getCodigos(reporte, idEmpresa):
     datos["codes"] = data
     return datos
 
-def getBalanceCodigos(idEmpresa):
-    data = movimientosBalance(idEmpresa)
+def getBalanceCodigos(idEmpresa, date_input):
+    cero = '0' if date_input < 10 else '' 
+    if date_input == 13:
+        data = movimientosBalance(idEmpresa)
+    else:
+        fecha = '2016-'+cero+str(date_input)+'-01'
+        data = movimientosBalanceMes(idEmpresa,fecha)
+
     codes = getCodigos("BG", idEmpresa)
     result = {}
     result["codes"] = codes["codes"]
