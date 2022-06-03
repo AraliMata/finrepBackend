@@ -246,10 +246,10 @@ def getAgrupadorDatos(datos):
 
 
 def totalTipos(datos, activo):
-    saldoInicial = datos['circulante'][0][2] + datos['fijo'][0][2] + datos['diferido'][0][2]
-    cargos = datos['circulante'][0][3] + datos['fijo'][0][3] + datos['diferido'][0][3]
-    abonos = datos['circulante'][0][4] + datos['fijo'][0][4] + datos['diferido'][0][4]
-    saldoActual = saldoInicial + cargos - abonos if activo else saldoInicial - cargos + abonos 
+    saldoInicial = round(datos['circulante'][0][2] + datos['fijo'][0][2] + datos['diferido'][0][2], 2)
+    cargos = round(datos['circulante'][0][3] + datos['fijo'][0][3] + datos['diferido'][0][3],2)
+    abonos = round(datos['circulante'][0][4] + datos['fijo'][0][4] + datos['diferido'][0][4],2)
+    saldoActual = round(saldoInicial + cargos - abonos,2) if activo else round(saldoInicial - cargos + abonos,2) 
 
     
     total = [[datos['total'][0][0], datos['total'][0][1], round(saldoInicial, 2), round(cargos, 2), round(abonos, 2), round(saldoActual, 2), "se", "d"]]
