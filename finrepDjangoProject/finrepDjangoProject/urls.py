@@ -62,7 +62,7 @@ urlpatterns = [
     path('contabilidad/reportes/empresas/<int:idEmpresa>/relaciones-analiticas', views.getRelacionesAnaliticas),
     path('prueba', views.prueba),
     path('contabilidad/reportes/empresas/<int:idEmpresa>/subir-archivos',views.uploadMovimientos),
-    path('/contabilidad/empresas/$idEmpresa/meses-disponibles', views.getMeses),
+    path('contabilidad/empresas/<int:idEmpresa>/meses-disponibles', views.getMeses),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('flutter_web_app/', lambda r: views.flutter_redirect(r, 'index.html')),

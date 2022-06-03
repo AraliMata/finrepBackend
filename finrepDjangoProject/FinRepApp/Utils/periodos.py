@@ -15,21 +15,20 @@ def init_db():
     return cursor
 
 
-def mesesDispoibles():
-    storedProc = {"meses": "EXEC dbo.mesesDispoibles", }
+def mesesDispoibles(idEmpresa):
+    storedProc = {"meses": "EXEC dbo.mesesDisponibles @empresaID = ?" }
+    params = (idEmpresa)
     cursor = init_db()
     data = []
     datos = {}
     for tipo in storedProc:
-        resultado = cursor.execute(storedProc[tipo])
+        resultado = cursor.execute(storedProc[tipo],params)
         rows = cursor.fetchall()
         for row in rows:
-            data.append(list(row))
+            data.append(list(row)[0])
         datos[tipo] = data
         data = []
+    
+    print(datos)
 
-    result = {}
-    result["meses"] = datos
-
-    print(result)
-    return result
+    return datos

@@ -126,11 +126,11 @@ def getEstadoResultados(request,idEmpresa,date_input=6):
 
 
 @api_view(['GET'])
-def getMeses(request):
+def getMeses(request,idEmpresa):
 
     init_db()
     
-    meses = generarResponseEstadoResultados(mesesDispoibles())
+    meses = mesesDispoibles(idEmpresa)
   
     return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json")
 
