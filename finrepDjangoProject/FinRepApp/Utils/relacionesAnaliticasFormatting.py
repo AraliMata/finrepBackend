@@ -15,6 +15,7 @@ def init_db():
     cursor = cnxn.cursor()
     return cursor
 
+
 def cuentasEmpresa():
     storedProc = {"cuentas": "EXEC dbo.GetCuentasEmpresa @empresaID = ?"}
     params = (2)
@@ -33,6 +34,7 @@ def cuentasEmpresa():
 
     print(datos)
     return datos
+
 
 def getCodigosRA(idEmpresa):
     storedProc = "EXEC dbo.codigosRelacionesAnaliticas @id_empresa = ?"
@@ -76,6 +78,7 @@ def movimientosRelacionesAnaliticas(empresaID):
     print("Movimientos relaciones analiticas:", datos)
     return datos
 
+
 def getRelacionesCuentasMovimientos(idEmpresa):
     cuentas = movimientosBalance(1)
     movimientos = movimientosRelacionesAnaliticas(idEmpresa)
@@ -95,7 +98,8 @@ def valoresActivos(activo, codigos, activos, codigosIndices, deudora, agrupadore
     saldoInicial = {'circulante':0, 'fijo':0, 'diferido':0}
 
     for val in activo:
-        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), "se", dA]
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1][1] <=  codigos[c][1][2]:
             tipo = 'circulante'
         elif val[1][1] == codigos[f][1][-2]:
@@ -107,23 +111,21 @@ def valoresActivos(activo, codigos, activos, codigosIndices, deudora, agrupadore
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+
+        estilo = "se"
 
         saldoInicial[tipo] += valor[2]  #Saldo inicial
         activos[tipo][0][3] += valor[3] #Cargos
         activos[tipo][0][4] += valor[4] #Abonos
         activos[tipo].append(valor)
     
-    activos['circulante'][0][2] += saldoInicial['circulante'] if deudora else activos['circulante'][0][2] - saldoInicial['circulante']
-    activos['fijo'][0][2] += saldoInicial['fijo'] if deudora else activos['fijo'][0][2] - saldoInicial['fijo']
-    activos['diferido'][0][2] += saldoInicial['diferido'] if deudora else activos['diferido'][0][2] - saldoInicial['diferido']
-    activos['circulante'][0][5] = activos['circulante'][0][2] + activos['circulante'][0][3] - activos['circulante'][0][4]
-    activos['fijo'][0][5] = activos['fijo'][0][2] + activos['fijo'][0][3] - activos['fijo'][0][4]
-    activos['diferido'][0][5] = activos['diferido'][0][2] + activos['diferido'][0][3] - activos['diferido'][0][4]
+    activos['circulante'][0][2] += round(saldoInicial['circulante'],2) if deudora else round(activos['circulante'][0][2] - saldoInicial['circulante'],2)
+    activos['fijo'][0][2] += round(saldoInicial['fijo'],2) if deudora else round(activos['fijo'][0][2] - saldoInicial['fijo'],2)
+    activos['diferido'][0][2] += round(saldoInicial['diferido'],2) if deudora else round(activos['diferido'][0][2] - saldoInicial['diferido'],2)
+    activos['circulante'][0][5] = round(activos['circulante'][0][2] + activos['circulante'][0][3] - activos['circulante'][0][4],2)
+    activos['fijo'][0][5] = round(activos['fijo'][0][2] + activos['fijo'][0][3] - activos['fijo'][0][4],2)
+    activos['diferido'][0][5] = round(activos['diferido'][0][2] + activos['diferido'][0][3] - activos['diferido'][0][4],2)
 
 
 def valoresPasivos(pasivo, codigos, pasivos, codigosIndices, deudora, agrupadoresDatos):
@@ -131,7 +133,10 @@ def valoresPasivos(pasivo, codigos, pasivos, codigosIndices, deudora, agrupadore
     dA = "d" if deudora else "a"
     estilo = "sq"
     saldoInicial = {'circulante':0, 'fijo':0, 'diferido':0}
+
     for val in pasivo:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1][1] <= codigos[c][1][-2]:
             tipo = 'circulante'
         elif val[1][1] == codigos[f][1][-2]: 
@@ -143,74 +148,72 @@ def valoresPasivos(pasivo, codigos, pasivos, codigosIndices, deudora, agrupadore
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+           
+        estilo = "se"
 
         saldoInicial[tipo] += valor[2] #Saldo inicial
         pasivos[tipo][0][3] += valor[3] #Cargos
         pasivos[tipo][0][4] += valor[4] #Abonos
         pasivos[tipo].append(valor)
 
-    pasivos['circulante'][0][2] += saldoInicial['circulante'] if deudora else pasivos['circulante'][0][2] - saldoInicial['circulante']
-    pasivos['fijo'][0][2] += saldoInicial['fijo'] if deudora else pasivos['fijo'][0][2] - saldoInicial['fijo']
-    pasivos['diferido'][0][2] += saldoInicial['diferido'] if deudora else pasivos['diferido'][0][2] - saldoInicial['diferido']
-    pasivos['circulante'][0][5] = pasivos['circulante'][0][2] + pasivos['circulante'][0][3] - pasivos['circulante'][0][4]
-    pasivos['fijo'][0][5] = pasivos['fijo'][0][2] + pasivos['fijo'][0][3] - pasivos['fijo'][0][4]
-    pasivos['diferido'][0][5] = pasivos['diferido'][0][2] + pasivos['diferido'][0][3] - pasivos['diferido'][0][4]
+    pasivos['circulante'][0][2] += round(saldoInicial['circulante'], 2) if deudora else round(pasivos['circulante'][0][2] - saldoInicial['circulante'], 2)
+    pasivos['fijo'][0][2] += round(saldoInicial['fijo'], 2) if deudora else round(pasivos['fijo'][0][2] - saldoInicial['fijo'], 2)
+    pasivos['diferido'][0][2] += round(saldoInicial['diferido'], 2) if deudora else round(pasivos['diferido'][0][2] - saldoInicial['diferido'], 2)
+    pasivos['circulante'][0][5] = round(pasivos['circulante'][0][2] + pasivos['circulante'][0][3] - pasivos['circulante'][0][4], 2)
+    pasivos['fijo'][0][5] = round(pasivos['fijo'][0][2] + pasivos['fijo'][0][3] - pasivos['fijo'][0][4], 2)
+    pasivos['diferido'][0][5] = round(pasivos['diferido'][0][2] + pasivos['diferido'][0][3] - pasivos['diferido'][0][4], 2)
+
 
 def valoresGeneral(datos, resultados, agrupadoresDatos, deudora, tipo):
     dA = "d" if deudora else "a"
     estilo = "se"
     saldoInicial, cargos, abonos = 0, 0, 0
     for val in datos:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1] == val[2]:
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
                 valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        
+           
+        estilo = "se"
+
         resultados.append(valor)
         saldoInicial += valor[2]
         cargos += valor[3]
         abonos += valor[4]
     
     saldoActual = saldoInicial - cargos + abonos if tipo == 1 else saldoInicial + cargos - abonos
-    total = [resultados[0][0], resultados[0][1], saldoInicial, cargos, abonos, saldoActual, "se", dA]
+    total = [resultados[0][0], resultados[0][1], round(saldoInicial, 2), round(cargos, 2), round(abonos, 2), round(saldoActual, 2), "se", dA]
 
     resultados[0] = total
+
 
 def valoresCapital(datos, resultados, agrupadoresDatos, deudora):
     dA = "d" if deudora else "a"
     estilo = "se"
     saldoInicial, cargos, abonos = 0, 0, 0
     for val in datos:
+        valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+
         if val[1] == val[2]:
             estilo = "n"
             if val[1] in agrupadoresDatos:
                 dato = agrupadoresDatos[val[1]] 
-                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2)]
-            else:
-                valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
-        else:
-            estilo = "se"
-            valor = [val[2], val[0], round(val[5], 2), round(val[3], 2), round(val[4], 2), round(val[6], 2), estilo, dA]
+                valor = [val[2], val[0], round(dato[4], 2), round(dato[2], 2), round(dato[3], 2), round(dato[5], 2), estilo, dA]
+           
+        estilo = "se"    
         
         resultados.append(valor)
         saldoInicial += valor[2]
         cargos += valor[3]
         abonos += valor[4]
     
-    resultados[0][2] += saldoInicial if deudora else resultados[0][2] - saldoInicial
-    
+    resultados[0][2] += round(saldoInicial, 2) if deudora else round(resultados[0][2] - saldoInicial, 2)
+
+
 def getCodigosIndices(codigos):
     tipos = ["Activo", "Pasivo", "Resultados Acreedora", "Resultados Deudora"]
 
@@ -231,6 +234,7 @@ def getCodigosIndices(codigos):
 
     return tipo_indices
 
+
 def getAgrupadorDatos(datos):
     agrupadoresDatos = {}
 
@@ -240,6 +244,7 @@ def getAgrupadorDatos(datos):
 
     return agrupadoresDatos
 
+
 def totalTipos(datos, activo):
     saldoInicial = datos['circulante'][0][2] + datos['fijo'][0][2] + datos['diferido'][0][2]
     cargos = datos['circulante'][0][3] + datos['fijo'][0][3] + datos['diferido'][0][3]
@@ -247,14 +252,15 @@ def totalTipos(datos, activo):
     saldoActual = saldoInicial + cargos - abonos if activo else saldoInicial - cargos + abonos 
 
     
-    total = [[datos['total'][0][0], datos['total'][0][1], saldoInicial, cargos, abonos, saldoActual, "se", "d"]]
+    total = [[datos['total'][0][0], datos['total'][0][1], round(saldoInicial, 2), round(cargos, 2), round(abonos, 2), round(saldoActual, 2), "se", "d"]]
     datos['total'] = total
 
     
 def totalCapital(datos):
     saldoActual = datos[0][2] + datos[0][3] - datos[0][4]
 
-    datos[0][5] = saldoActual
+    datos[0][5] = round(saldoActual,2)
+
 
 def getLista(datos):
     response = []
@@ -278,11 +284,10 @@ def generarResponseRelacionesAnaliticas(datos):
     cA, fA, dA = codigosIndices['circulanteActivo'], codigosIndices['fijoActivo'],  codigosIndices['diferidoActivo']
     cP, fP, dP =  codigosIndices['circulantePasivo'], codigosIndices['fijoPasivo'], codigosIndices['diferidoPasivo']
     activos = {'total':[['000-0100', "ACTIVO"]], 'circulante':[[codigos[cA][1], 'CIRCULANTE', 0, 0, 0,0, "se", "d"]], 'fijo': [[codigos[fA][1], 'FIJO', 0, 0, 0,0, "se", "d"]], 'diferido':[[codigos[dA][1], 'DIFERIDO', 0, 0, 0,0, "se", "d"]]}
-    pasivos = {'total':[['000-0200', "PASIVO"]],'circulante':[[codigos[cP][1], 'CIRCULANTE', 0, 0, 0,0, "se", "d"]], 'fijo': [[codigos[fP][1], 'FIJO', 0, 0, 0,0, "se", "d"]], 'diferido':[[codigos[dP][1], 'DIFERIDO', 0, 0, 0, "se", "d"]]}
+    pasivos = {'total':[['000-0200', "PASIVO"]],'circulante':[[codigos[cP][1], 'CIRCULANTE', 0, 0, 0,0, "se", "d"]], 'fijo': [[codigos[fP][1], 'FIJO', 0, 0, 0,0, "se", "d"]], 'diferido':[[codigos[dP][1], 'DIFERIDO', 0, 0, 0,0, "se", "d"]]}
     capital = [['000-0300', 'CAPITAL', 0,0,0,0, "se", "d"]]
     RAcreedora = [['000-0400', 'RESULTADOS ACREEDORAS']]
     RDeudora = [['000-0500', 'RESULTADOS DEUDORAS']]
-
 
     valoresActivos(movimientos['ActivoDeudora'], codigos, activos, codigosIndices, True, agrupadoresDatos)
     valoresActivos(movimientos['ActivoAcreedora'], codigos, activos, codigosIndices, False, agrupadoresDatos)
