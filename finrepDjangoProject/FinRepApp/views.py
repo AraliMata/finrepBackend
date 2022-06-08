@@ -47,7 +47,7 @@ def getMovimientos(request,idEmpresa, date_input):
     json_object = js.dumps(balanceGeneral)
     print(json_object) 
  
-    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("latin1"), content_type="application/json; charset=utf-8")
+    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
 
 @api_view(['GET'])
 def prueba(request):
