@@ -47,7 +47,7 @@ def getMovimientos(request,idEmpresa, date_input):
     json_object = js.dumps(balanceGeneral)
     print(json_object) 
  
-    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("latin1"), content_type="application/json")
+    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("latin1"), content_type="application/json; charset=utf-8")
 
 @api_view(['GET'])
 def prueba(request):
@@ -122,7 +122,7 @@ def getEstadoResultados(request,idEmpresa,date_input=6):
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
-    return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json")
+    return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
 
 
 @api_view(['GET'])
@@ -132,7 +132,7 @@ def getMeses(request,idEmpresa):
     
     meses = mesesDispoibles(idEmpresa)
   
-    return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json")
+    return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json; charset=utf-8")
 
 
 @api_view(['GET'])
@@ -163,7 +163,7 @@ def getRelacionesAnaliticas(request,idEmpresa):
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
-    return HttpResponse(js.dumps(relacionesAnaliticas, ensure_ascii=False).encode("utf-8"), content_type="application/json")
+    return HttpResponse(js.dumps(relacionesAnaliticas, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
 
 @api_view(['GET'])
 def getEmpresas(request,idUsuario):
