@@ -8,3 +8,4 @@ class EmployeeSerializer(serializers.ModelSerializer):
         'ename',
         'eemail'
         ]
+
