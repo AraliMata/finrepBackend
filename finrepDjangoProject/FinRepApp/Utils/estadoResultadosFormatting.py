@@ -118,6 +118,8 @@ def estadoResultadosPeriodo(idEmpresa=2, date_input='2016-06-01'):
     for tipo in storedProc:
         resultado = cursor.execute(storedProc[tipo], params)
         rows = cursor.fetchall()
+        if not rows:
+            return {}
         for row in rows:
             data.append(list(row))
         datos[tipo] = data
@@ -128,6 +130,7 @@ def estadoResultadosPeriodo(idEmpresa=2, date_input='2016-06-01'):
 
 def getEstadoPeriodo(idEmpresa, date_input='2016-06-01'):
     data = estadoResultadosPeriodo(idEmpresa, date_input)
+    if not data: return {}
     codes = getCodigos("ER", idEmpresa)
     result = {}
     result["codes"] = codes["codes"]

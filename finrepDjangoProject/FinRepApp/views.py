@@ -41,6 +41,11 @@ def getMovimientos(request,idEmpresa, date_input):
     init_db()
 
     balance = getBalanceCodigos(idEmpresa, date_input)
+
+    if not balance:
+        return HttpResponse(js.dumps({"error": "No se encontraron datos","errorCode": 12}),status=204)
+
+
     balanceGeneral = generarResponseBalanceGeneral(balance)
     # Serializing json  
     print("Balance: ", balanceGeneral)
@@ -82,11 +87,17 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
         for e in queryset:
             json['empresas'][e.idEmpresa.nombre] = e.idEmpresa.id 
         """
-
+        if queryset:
+            print('si hay queryset')
+        else:
+            print('no hay queryset')
+        if not queryset:
+            return Response({"error": "No se encontraron datos","errorCode": 22},status=204)
         json = []
         for e in queryset:
             json.append({'id':e.idEmpresa.id,'nombre':e.idEmpresa.nombre})
-        return Response(json)
+
+        return Response(json,status=200)
 """         # json = {'empresas':{} , 'informacionStatus': []}
         json = {}
         for e in queryset:
@@ -116,8 +127,9 @@ def getEstadoResultados(request,idEmpresa,date_input=6):
     fecha = '2016-'+string+'-01'
 
     init_db()
-    
-    estadoResultados = generarResponseEstadoResultados(getEstadoPeriodo(idEmpresa,fecha))
+    estadoPeriodo =getEstadoPeriodo(idEmpresa,fecha)
+    if not estadoPeriodo: return HttpResponse(js.dumps({"error": "No se encontraron datos","errorCode": 32}),status=204)
+    estadoResultados = generarResponseEstadoResultados(estadoPeriodo)
     # Serializing json  
 
     #print(json, "JSON")

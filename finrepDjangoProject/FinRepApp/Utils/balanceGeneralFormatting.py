@@ -114,6 +114,8 @@ def movimientosBalance(idEmpresa):
     for tipo in storedProc:
         resultado = cursor.execute(storedProc[tipo], params)
         rows = cursor.fetchall()
+        if not rows:
+            return {}
         for row in rows:
             data.append(list(row))
         datos[tipo] = data
@@ -136,6 +138,8 @@ def movimientosBalanceMes(idEmpresa, date_input):
     for tipo in storedProc:
         resultado = cursor.execute(storedProc[tipo], params)
         rows = cursor.fetchall()
+        if not rows:
+            return {}
         for row in rows:
             data.append(list(row))
         datos[tipo] = data
@@ -186,6 +190,9 @@ def getBalanceCodigos(idEmpresa, date_input):
     else:
         fecha = '2016-'+cero+str(date_input)+'-01'
         data = movimientosBalanceMes(idEmpresa,fecha)
+
+    if not data:
+        return data
 
     codes = getCodigos("BG", idEmpresa)
     result = {}
