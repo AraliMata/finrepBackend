@@ -24,6 +24,8 @@ def mesesDispoibles(idEmpresa):
     for tipo in storedProc:
         resultado = cursor.execute(storedProc[tipo],params)
         rows = cursor.fetchall()
+        if not rows:
+            return {}
         for row in rows:
             data.append(list(row)[0])
         datos[tipo] = data

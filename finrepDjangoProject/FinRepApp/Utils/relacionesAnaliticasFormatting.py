@@ -81,6 +81,8 @@ def movimientosRelacionesAnaliticas(idEmpresa):
 
 def getRelacionesCuentasMovimientos(idEmpresa=2):
     cuentas = movimientosBalance(idEmpresa)
+    if not cuentas: 
+        return {}
     movimientos = movimientosRelacionesAnaliticas(idEmpresa)
     codes = getCodigosRA(idEmpresa)
     result = {}

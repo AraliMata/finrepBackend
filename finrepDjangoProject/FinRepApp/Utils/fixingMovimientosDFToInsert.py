@@ -4,16 +4,20 @@ from datetime import datetime
 import numpy as np
 
 def init_db():
-    server = 'finrep-db-server.database.windows.net' 
-    database = 'FinrepDB' 
-    username = 'equipoelite' 
-    password = 'CoffeeSoft-2022' 
-    global cnxn
-    # cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    global cursor
-    cursor = cnxn.cursor()
-    return cursor
+    try:
+        server = 'finrep-db-server.database.windows.net' 
+        database = 'FinrepDB' 
+        username = 'equipoelite' 
+        password = 'CoffeeSoft-2022' 
+        global cnxn
+        # cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        global cursor
+        cursor = cnxn.cursor()
+        return cursor
+    except pyodbc.Error:
+        return False
+
 
 def readXlsxFile(request,idEmpresa):
     print(request.FILES['movimientos'])
@@ -25,6 +29,8 @@ def readXlsxFile(request,idEmpresa):
 
 def insertInDatabase(df,idEmpresa):
     cursor = init_db()
+    if not cursor:
+        return False
     print("HOLA MAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     print(catalogo)
     print (catalogo.loc[lambda catalogo: catalogo['nivel'] == 1])
@@ -45,6 +51,7 @@ def insertInDatabase(df,idEmpresa):
         cursor.execute("INSERT INTO dbo.movimientos (idEmpresa_id,codigo,nombre,concepto,referencia,saldoInicial,cargos,abonos,fecha,codigoAgrupador,ingresoEgreso,nombreAgrupador,tipo) values(?,?,?,?,?,?,?,?,?,?,?,?,?)",row.id_empresa,row.codigo,row.nombre,row.concepto,row.referencia,float(row.saldo_inicial),float(row.cargos),float(row.abonos),row.fecha,row.codigo_agrupador,row.tipo,row.nombre_grupo,row.APC)
     cnxn.commit()
     cursor.close()
+    return True
 
 def es_agrupador(code):
     serie = catalogo.loc[catalogo['codigo'] == code]

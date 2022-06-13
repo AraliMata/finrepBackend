@@ -2,7 +2,9 @@ from tokenize import String
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+# import json
 import json
+
 from rest_framework.response import Response
 
 
@@ -31,7 +33,8 @@ def my_view(request):
         print(user.id)
         userId = user.id
         #print(password)
-        return HttpResponse(userId,status=202)
+        # return HttpResponse(userId,status=200)
+        return HttpResponse(json.dumps({"id":userId,"respuesta": "usuario y contraseña correctos","codigo": 510}),status=200)
         # return idddd
         # return user.id
         
@@ -40,7 +43,7 @@ def my_view(request):
         ...
     else:
         print('terrible')
-        return HttpResponse(status = 400)
+        return HttpResponse(json.dumps({"error": "Algún dato incorrecto","codigo": 52}),status = 204)
         # Return an 'invalid login' error message.
 
 #Logout

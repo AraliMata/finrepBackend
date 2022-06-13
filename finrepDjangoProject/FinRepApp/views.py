@@ -38,7 +38,8 @@ class Cuentas(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def getMovimientos(request,idEmpresa, date_input):
-    init_db()
+    if not init_db():
+        return HttpResponse(js.dumps({"error": "Base de datos no disponible","errorCode": 13}),status=503)
 
     balance = getBalanceCodigos(idEmpresa, date_input)
 
@@ -52,7 +53,7 @@ def getMovimientos(request,idEmpresa, date_input):
     json_object = js.dumps(balanceGeneral)
     print(json_object) 
  
-    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
+    return HttpResponse(js.dumps(balanceGeneral, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8",status=200)
 
 @api_view(['GET'])
 def prueba(request):
@@ -120,13 +121,16 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
 
 @api_view(['GET'])
 def getEstadoResultados(request,idEmpresa,date_input=6):
+    if not init_db():
+        return HttpResponse(js.dumps({"error": "Base de datos no disponible","errorCode": 33}),status=503)
+
     if date_input < 10:
         string = '0'+str(date_input)
     else:
         string = str(date_input)
     fecha = '2016-'+string+'-01'
 
-    init_db()
+
     estadoPeriodo =getEstadoPeriodo(idEmpresa,fecha)
     if not estadoPeriodo: return HttpResponse(js.dumps({"error": "No se encontraron datos","errorCode": 32}),status=204)
     estadoResultados = generarResponseEstadoResultados(estadoPeriodo)
@@ -134,17 +138,21 @@ def getEstadoResultados(request,idEmpresa,date_input=6):
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
-    return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
+    return HttpResponse(js.dumps(estadoResultados, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8",status=200)
 
 
 @api_view(['GET'])
 def getMeses(request,idEmpresa):
 
-    init_db()
+    if not init_db():
+        return HttpResponse(js.dumps({"error": "Base de datos no disponible","errorCode": 73}),status=503)
     
     meses = mesesDispoibles(idEmpresa)
+    if not meses:
+        return HttpResponse(js.dumps({"error": "No se encontraron datos","errorCode": 72}),status=204)
+
   
-    return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json; charset=utf-8")
+    return HttpResponse(js.dumps(meses, ensure_ascii=False), content_type="application/json; charset=utf-8", status=200)
 
 
 @api_view(['GET'])
@@ -168,14 +176,20 @@ def getMovimientosTest(request,idEmpresa):
 @api_view(['GET'])
 def getRelacionesAnaliticas(request,idEmpresa):
 
-    init_db()
+    if not init_db():
+        return HttpResponse(js.dumps({"error": "Base de datos no disponible","errorCode": 63}),status=503)
     
-    relacionesAnaliticas = generarResponseRelacionesAnaliticas(getRelacionesCuentasMovimientos(idEmpresa))
+    relaciones = getRelacionesCuentasMovimientos(idEmpresa)
+
+    if not relaciones:
+        return HttpResponse(js.dumps({"error": "No se encontraron datos","errorCode": 62}),status=204)
+
+    relacionesAnaliticas = generarResponseRelacionesAnaliticas(relaciones)
     # Serializing json  
 
     #print(json, "JSON")
     # return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
-    return HttpResponse(js.dumps(relacionesAnaliticas, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8")
+    return HttpResponse(js.dumps(relacionesAnaliticas, ensure_ascii=False).encode("utf-8"), content_type="application/json; charset=utf-8", status=200)
 
 @api_view(['GET'])
 def getEmpresas(request,idUsuario):
@@ -185,9 +199,12 @@ def getEmpresas(request,idUsuario):
 @api_view(['POST'])
 def uploadMovimientos(request,idEmpresa):
     df_listo = readXlsxFile(request,idEmpresa)
-    init_db()
-    insertInDatabase(df_listo,idEmpresa)
-    return Response({"Valor de linea 0 columna 0":df_listo.iat[0,0]})
+    # init_db()
+    if insertInDatabase(df_listo,idEmpresa):
+        return Response({"respuesta": "Operación finalizada","statusCode": 410}, status=201)
+    else:
+        return Response({"error": "Base de datos no disponible","errorCode": 43}, status=503)
+        
 
 def flutter_redirect(request, resource):
     return serve(request, resource, FLUTTER_WEB_APP)

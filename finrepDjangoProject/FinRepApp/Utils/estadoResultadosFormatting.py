@@ -5,16 +5,19 @@ import logging
 from FinRepApp.Utils.balanceGeneralFormatting import *
 
 def init_db():
-    server = 'finrep-db-server.database.windows.net' 
-    database = 'FinrepDB' 
-    username = 'equipoelite' 
-    password = 'CoffeeSoft-2022' 
-    global cnxn
-    # cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    global cursor
-    cursor = cnxn.cursor()
-    return cursor
+    try:
+        server = 'finrep-db-server.database.windows.net' 
+        database = 'FinrepDB' 
+        username = 'equipoelite' 
+        password = 'CoffeeSoft-2022' 
+        global cnxn
+        # cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        global cursor
+        cursor = cnxn.cursor()
+        return cursor
+    except pyodbc.Error:
+        return False
     
 
 def valoresIngresos(ingresos, ingresosPeriodo, ingresosAcumulado, totalIngresos):
