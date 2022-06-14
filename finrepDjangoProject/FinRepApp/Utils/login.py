@@ -19,7 +19,7 @@ def register(request):
         email = datos["email"]
         password = datos["password"]
         user = User.objects.create_user(username, email, password)
-        return user
+        return HttpResponse(user,status=201)
 
 #Login del usuario
 def my_view(request):
