@@ -218,7 +218,7 @@ def registerUser(request):
 
 # @permission_classes([AllowAny])
 # @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-@api_view(['POST'])
+# @api_view(['POST'])
 def login(request):
     loginmarrano = my_view(request)
     return loginmarrano
