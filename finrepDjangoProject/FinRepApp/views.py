@@ -216,9 +216,9 @@ def registerUser(request):
     #user = User.objects.create_user('Funcion', 'exito@hotmail.com', 'sisi')
     #llamar registro de login.py
 
-# @api_view(['POST'])
 # @permission_classes([AllowAny])
 # @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+@api_view(['POST'])
 def login(request):
     loginmarrano = my_view(request)
     return loginmarrano
