@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from rest_framework.decorators import APIView
 from FinRepApp.Utils.relacionesAnaliticasFormatting import generarResponseRelacionesAnaliticas, getRelacionesCuentasMovimientos
 from FinRepApp.Utils.periodos import mesesDispoibles
+from FinRepApp.Utils.verEmpresas import verEmpresasPorfi
 from FinRepApp.models import Cuentas
 from .serializer import *
 from .serializer import CuentasSerializer
@@ -24,6 +25,8 @@ import json as js
 import os
 from django.views.static import serve
 from rest_framework.decorators import action
+from FinRepApp.models import  Empresa
+from FinRepApp.models import  Usuario_Empresa
 
 
 
@@ -116,7 +119,13 @@ class Usuario_EmpresaViewSet(viewsets.ReadOnlyModelViewSet):
         # else:
         #     return Response(serializer.errors)
 
+class Asignar_EmpresasViewSet(viewsets.ModelViewSet):
+    queryset = Empresa.objects.all()
+    serializer_class = EmpresaSerializer
 
+class CrearUsuarioEmpresaViewSet(viewsets.ModelViewSet):
+    queryset = Usuario_Empresa.objects.all()
+    serializer_class = Usuario_EmpresaSerializer
 
 
 @api_view(['GET'])
@@ -205,6 +214,14 @@ def uploadMovimientos(request,idEmpresa):
     else:
         return Response({"error": "Base de datos no disponible","errorCode": 43}, status=503)
         
+
+@api_view(['POST'])
+def verEmpresas(request,idEmpresa, idUsuario):
+    init_db()
+    print(idEmpresa, idUsuario)
+    verEmpresasPorfi(idEmpresa, idUsuario)
+    return Response("Se armo")
+
 
 def flutter_redirect(request, resource):
     return serve(request, resource, FLUTTER_WEB_APP)

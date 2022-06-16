@@ -50,6 +50,8 @@ router.register('employeedetails', Employee)
 router.register('cuentas', views.Cuentas)
 # router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet, basename='Usuario_EmpresaViewSet')
 router.register('contabilidad/usuarios', views.Usuario_EmpresaViewSet)
+router.register('contabilidad/empresas', views.Asignar_EmpresasViewSet)
+router.register('contabilidad/usuario-empresas', views.CrearUsuarioEmpresaViewSet)
 # router.register('cuentas', cuentas_list, basename='cuentas-list')
 # recibirArchivoPost = views.recibirArchivo.as_view({'post': 'create'})
 # router.register('xlsx', recibirArchivoPost)
@@ -72,6 +74,7 @@ urlpatterns = [
     # path('contabilidad/reportes/empresas/', views.getMovimientosTest),
     path('register',views.registerUser),
     path('login',views.login),
+    path('ver-empresas/<int:idEmpresa>/<int:idUsuario>',views.verEmpresas),
     #path('user/', views.UserRecordView.as_view(), name='users'),
     #path('api/', include('api.urls', namespace='api')),
     #path('api-token-auth/', views2.obtain_auth_token, name='api-token-auth'),
